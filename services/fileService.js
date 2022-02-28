@@ -18,7 +18,7 @@ class FileService {
                 return reject({message: 'File error'})
             }
         }))
-    }
+    }  
     deleteFile(req, file) {
         const path = this.getPath(req, file)
         if (file.type === 'dir') {
