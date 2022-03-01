@@ -4,31 +4,25 @@ const fs = require('fs')
 const User = require('../models/User')
 const File = require('../models/File')
 const Uuid = require('uuid')
+const path = require('path')
 
 
 class FileController {
     
-    async writeFile(req, res) {
-        try {
-            const {name, type, parent} = req.body
-            const file = new File({name, type, parent, user: req.user.id})
-            const parentFile = await File.findOne({_id: parent})
-            if(!parentFile) {
-                file.path = name
-                await fileService.createDir(req, file)
-            } else {
-                file.path = `${parentFile.path}\\${file.name}`
-                await fileService.createDir(req, file)
-                parentFile.childs.push(file._id)
-                await parentFile.save()
-            }
-            await file.save()
-            return res.json(file)
-        } catch (e) {
-            console.log(e)
-            return res.status(400).json(e)
+    async change(req, res) {
+       try {
+        const file = path.resolve(req.body.name)
+        console.log('start write ' + req.body.name + 'path: ' + file)     
+            await  new Promise((resolve, reject) => {
+                fs.writeFileSync(file, req.body.data)
+                resolve()
+              })
+            return res.json('Write OK: ' + req.body.name)
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json(err)
         }
-    }
+    } 
     
     async createDir(req, res) {
         try {
