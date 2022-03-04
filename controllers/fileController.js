@@ -11,8 +11,8 @@ class FileController {
     
     async change(req, res) {
        try {
-        const file = path.resolve(req.body.name)
-        console.log('start write ' + req.body.name + 'path: ' + file)     
+        const file = path.resolve('static', req.body.name)
+        console.log('start write ')     
             await  new Promise((resolve, reject) => {
                 fs.writeFileSync(file, req.body.data)
                 resolve()
@@ -22,7 +22,23 @@ class FileController {
             console.log(err)
             return res.status(400).json(err)
         }
-    } 
+    }  
+
+    async read(req, res) {
+        try {
+         const file = path.resolve('static', req.body.name)
+         console.log('start read ' + req.body.name + 'path: ' + file)     
+             let data = await new Promise((resolve, reject) => {
+                let data = fs.readFileSync(file)
+                resolve(data)
+               });
+
+             return res.json('Read OK: ' + data)
+         } catch (err) {
+             console.log(err)
+             return res.status(400).json(err)
+         }
+     } 
     
     async createDir(req, res) {
         try {
@@ -165,7 +181,7 @@ class FileController {
             const file = req.files.file
             const user = await User.findById(req.user.id)
             const avatarName = Uuid.v4() + ".jpg"
-            file.mv(config.get('staticPath') + "\\" + avatarName)
+            file.mv(path.resolve('static', avatarName))
             user.avatar = avatarName
             await user.save()
             return res.json(user)
@@ -178,7 +194,7 @@ class FileController {
     async deleteAvatar(req, res) {
         try {
             const user = await User.findById(req.user.id)
-            fs.unlinkSync(config.get('staticPath') + "\\" + user.avatar)
+            fs.unlinkSync(path.resolve('static', user.avatar))
             user.avatar = null
             await user.save()
             return res.json(user)
