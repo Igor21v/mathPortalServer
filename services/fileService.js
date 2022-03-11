@@ -1,6 +1,6 @@
 const fs = require('fs')
-const File = require('../models/File')
-const config = require('config')
+const { join } = require('path')
+const path = require('path')
 
 class FileService {
 
@@ -29,7 +29,14 @@ class FileService {
     }
 
     getPath(req, file) {
-        return req.filePath + '\\' + file.user + '\\' + file.path
+        if (file.user) {
+            console.log(String(file.user))
+            return path.join(req.filePath, 'users', String(file.user), file.path)
+            
+        }
+        if (file.theme) {
+            return path.join(req.filePath, 'themes', file.theme)
+        }
     }
 }
 
