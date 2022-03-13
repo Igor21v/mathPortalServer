@@ -19,6 +19,16 @@ class FileService {
             }
         }))
     }  
+    readDir(req, file) {
+        const filePath = this.getPath(req, file)
+            try {
+                const files = fs.readdirSync(filePath)
+              return files
+            } catch (e) {
+                return reject({message: 'Dir error'})
+            }
+        }
+      
     deleteFile(req, file) {
         const path = this.getPath(req, file)
         if (file.type === 'dir') {
@@ -31,8 +41,7 @@ class FileService {
     getPath(req, file) {
         if (file.user) {
             console.log(String(file.user))
-            return path.join(req.filePath, 'users', String(file.user), file.path)
-            
+            return path.join(req.filePath, 'users', String(file.user), file.path)         
         }
         if (file.theme) {
             return path.join(req.filePath, 'themes', file.theme)

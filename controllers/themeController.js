@@ -9,13 +9,13 @@ const path = require('path')
 
 
 class FileController {
-      
+
     async createTheme(req, res) {
         try {
-            const {name, discription, order, isPublic} = req.body
-            const theme = new Theme({name, discription, order, isPublic})
+            const { name, discription, order, isPublic } = req.body
+            const theme = new Theme({ name, discription, order, isPublic })
             await theme.save()
-            const file = {theme: theme.id}
+            const file = { theme: theme.id }
             console.log(file)
             await fileService.createDir(req, file)
             return res.json(theme)
@@ -27,27 +27,25 @@ class FileController {
 
     async getTheme(req, res) {
         try {
-            const {showAll} = req.body
-            console.log(req.body)
-            console.log(showAll)
+            const { showAll } = req.body
             let themes
-             if (showAll) {
-                themes = await Theme.find().sort({order:1})              
-                themes = themes.map( theme =>{
-                    const files = JSON.parse(JSON.stringify(theme))
-                    files.files=  fs.readdirSync(req.filePath) 
-                    console.log(files);
-                    return files
-                }
-                )
-
-            } else { 
-                themes = await Theme.find({isPublic: "true"}).sort({order:1})
+            if (showAll) {
+                themes = await Theme.find().sort({ order: 1 })
+            } else {
+                themes = await Theme.find({ isPublic: "true" }).sort({ order: 1 })
             }
+            themes = themes.map(theme => {
+                theme = JSON.parse(JSON.stringify(theme))
+                const file = { theme: theme._id }
+                theme.files = fileService.readDir(req, file)
+                console.log(theme);
+                return theme
+            }
+            )
             return res.json(themes)
         } catch (e) {
             console.log(e)
-            return res.status(500).json({message: "Can not get themes"})
+            return res.status(500).json({ message: "Can not get themes" })
         }
     }
 }
