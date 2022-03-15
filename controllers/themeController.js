@@ -1,10 +1,6 @@
 const fileService = require('../services/fileService')
-const config = require('config')
 const fs = require('fs')
-const User = require('../models/User')
-const File = require('../models/File')
 const Theme = require('../models/Theme')
-const Uuid = require('uuid')
 const path = require('path')
 
 
@@ -36,8 +32,7 @@ class FileController {
             }
             themes = themes.map(theme => {
                 theme = JSON.parse(JSON.stringify(theme))
-                const file = { theme: theme._id }
-                theme.files = fileService.readDir(req, file)
+                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
                 console.log(theme);
                 return theme
             }
@@ -48,6 +43,54 @@ class FileController {
             return res.status(500).json({ message: "Can not get themes" })
         }
     }
+
+    async postFile(req, res) {
+        const file = req.files.file
+        try {
+            let filePath =  path.join(req.filePath, 'themes', req.body.themeId, file.name);
+            if (fs.existsSync(filePath)) {
+                return res.status(400).json({message: 'File already exist'})
+            }
+            /* fs.writeFileSync(filePath, file.data) */
+            await file.mv(filePath)
+            return res.json("Post file OK")
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not post file" })
+        }
+    }
+    
+    async deleteFile(req, res) {
+        const {themeId, nameFile} = req.body
+        try {
+            let filePath =  path.join(req.filePath, 'themes', themeId, nameFile);
+            fs.unlinkSync(filePath)
+            return res.json("Delete file OK")
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not delete file" })
+        }
+    }
+
+    async deleteTheme(req, res) {
+        const {themeId} = req.body
+        try {
+            console.log(themeId)
+            const theme = await Theme.findOne({_id: themeId})
+            console.log(theme)
+            await theme.remove()
+            let filePath =  path.join(req.filePath, 'themes', themeId);
+            console.log(filePath)
+            fs.rmSync(filePath, {recursive: true})
+            return res.json("Delete theme OK")
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not delete file" })
+        }
+    }
+    
+
+
 }
 
 module.exports = new FileController()
