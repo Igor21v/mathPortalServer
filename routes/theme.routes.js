@@ -5,7 +5,7 @@ const themeController = require('../controllers/themeController')
 
 router.post('', authMiddleware, themeController.createTheme)
 router.post('/postFile', authMiddleware, themeController.postFile)
-router.get('', authMiddleware, themeController.getTheme)
+router.get('', themeController.getTheme)
 router.delete('/deleteFile', authMiddleware, themeController.deleteFile)
 router.delete('/deleteTheme', authMiddleware, themeController.deleteTheme)
 
