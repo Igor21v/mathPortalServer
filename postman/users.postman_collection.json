@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "826e0274-2beb-4b7b-a7ea-d7eab51eda18",
+		"name": "users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "new user test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@mail.ru\",\r\n    \"password\": \"test\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@mail.ru\",\r\n    \"password\": \"test\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create folder",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMTFkNjczN2JiYjZlMzc0MzgyZDM4MSIsImlhdCI6MTY0NTM0Mzc1MywiZXhwIjoxNjQ1MzQ3MzUzfQ.zMtsnICeBFaVY7ePH0bbGeMiufCn2PYrPRbtA4BYGMs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"1216di0r\",\r\n    \"type\": \"dir\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change file",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMTFkNjczN2JiYjZlMzc0MzgyZDM4MSIsImlhdCI6MTY0NjIyNjMwOSwiZXhwIjoxNjQ2MjI5OTA5fQ.A7ajjK5991ZpG1nVFDpngeNwp0wuwv7rIW7oqYzYMOM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"1211.txt\",\r\n    \"data\": \"vvv\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/files/write",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files",
+						"write"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create theme",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjIxZGE5MjViYmE2N2VjYzk1ZGM3ZSIsImlhdCI6MTY0NjQwMzAwMCwiZXhwIjoxNjQ2NDA2NjAwfQ.TYt5D95iwqtB6ns_mqQS6QxDMAXDr-oSGGFua9PAUHo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"7777\",\r\n    \"discription\": \"777\",\r\n    \"order\": \"56\",\r\n    \"isPublic\": \"false\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/theme",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"theme"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get themes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjc3MDY4ODgzODkyMmY4ZmJhYTY4NyIsImlhdCI6MTY0NzM1OTA3NywiZXhwIjoxNjQ3NjE4Mjc3fQ.nJxqzocfYThgZUHLbudNEosNKmSd0qLknR3QwI7EIfA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"showAll\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/theme",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"theme"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload files theme",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjc3MDY4ODgzODkyMmY4ZmJhYTY4NyIsImlhdCI6MTY0NzI2MDQ5NSwiZXhwIjoxNjQ3NTE5Njk1fQ.ufoKb0C1OrXxAbfxKphpMob4rll0O-EhV1CqhbdgZkY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Igor/Downloads/12.pdf"
+						},
+						{
+							"key": "themeId",
+							"value": "622772d909b1e9334fb1126b",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/theme/postFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"theme",
+						"postFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete file theme",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjc3MDY4ODgzODkyMmY4ZmJhYTY4NyIsImlhdCI6MTY0NzE0NTM3MiwiZXhwIjoxNjQ3MjMxNzcyfQ.14P4EZIKOJuYZ5tzRwRQE-tu8CqqtETO_YOBTL1-I5Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"themeId\" : \"622772d909b1e9334fb1126b\",\r\n    \"nameFile\" : \"888.txt\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/theme/deleteFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"theme",
+						"deleteFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete theme",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjc3MDY4ODgzODkyMmY4ZmJhYTY4NyIsImlhdCI6MTY0NzE0NTM3MiwiZXhwIjoxNjQ3MjMxNzcyfQ.14P4EZIKOJuYZ5tzRwRQE-tu8CqqtETO_YOBTL1-I5Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"themeId\" : \"622777ce253da5a4c0f36f33\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/theme/deleteTheme",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"theme",
+						"deleteTheme"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "read file",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMTFkNjczN2JiYjZlMzc0MzgyZDM4MSIsImlhdCI6MTY0NjE0NzMwMywiZXhwIjoxNjQ2MTUwOTAzfQ.neq5sdCGwguYTeCqIw9Yq52gl3ow5H4PKhHGsu10S7Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"1211.txt\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/files/read",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files",
+						"read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get dir root",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMTFkNjczN2JiYjZlMzc0MzgyZDM4MSIsImlhdCI6MTY0NTMzNjM0NCwiZXhwIjoxNjQ1MzM5OTQ0fQ.n8oIgpI2RvKbKj6kI_oct-cu1XDMZGugqo0YqWrEivM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://glacial-earth-64615.herokuapp.com/api/files",
+					"protocol": "https",
+					"host": [
+						"glacial-earth-64615",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get dir child",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmM5N2ZmZWIyMzU4MjQ0NjU2Njk2MiIsImlhdCI6MTY0Mzk1NDE5MCwiZXhwIjoxNjQzOTU3NzkwfQ.X6cMcp-4H3I3xOExyhu2uQDdsCqUcUotCYiYlBEDmE4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/files?parent=61fcae3ceb23582446566971",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files"
+					],
+					"query": [
+						{
+							"key": "parent",
+							"value": "61fcae3ceb23582446566971"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmM5N2ZmZWIyMzU4MjQ0NjU2Njk2MiIsImlhdCI6MTY0Mzk1NDE5MCwiZXhwIjoxNjQzOTU3NzkwfQ.X6cMcp-4H3I3xOExyhu2uQDdsCqUcUotCYiYlBEDmE4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/files?parent=61fcae3ceb23582446566971",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files"
+					],
+					"query": [
+						{
+							"key": "parent",
+							"value": "61fcae3ceb23582446566971"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload files",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmM5N2ZmZWIyMzU4MjQ0NjU2Njk2MiIsImlhdCI6MTY0NDE0ODUzMSwiZXhwIjoxNjQ0MTUyMTMxfQ.OuANa5xJFwJqy9WX55PNzRbFocs8yWJZU68PV57xHiw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "image2копия.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/files/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload files to child folder",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmM5N2ZmZWIyMzU4MjQ0NjU2Njk2MiIsImlhdCI6MTY0NDE0ODUzMSwiZXhwIjoxNjQ0MTUyMTMxfQ.OuANa5xJFwJqy9WX55PNzRbFocs8yWJZU68PV57xHiw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "image2копия.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/files/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"files",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

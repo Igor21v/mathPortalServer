@@ -1,6 +1,6 @@
 {
     "serverPort" : 5000,
-    "dbUrl" : "mongodb://localhost/math",
+    "dbUrl" : "mongodb+srv://igor21v:iK7-Xw2-jdj-V8B@cloud.urqy1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     "secretKey": "mern-secket-key",
     "filePath": "C:\\Users\\Igor\\MATH_PORTAL\\server\\files"
 
