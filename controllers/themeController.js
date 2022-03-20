@@ -4,16 +4,15 @@ const Theme = require('../models/Theme')
 const path = require('path')
 
 
-class FileController {
+class ThemeController {
 
     async createTheme(req, res) {
         try {
             const { name, discription, order, isPublic } = req.body
             const theme = new Theme({ name, discription, order, isPublic })
             await theme.save()
-            const file = { theme: theme.id }
-            console.log(file)
-            await fileService.createDir(req, file)
+            const folderDir =  path.join(req.filePath, 'themes', theme.id)    
+            fs.mkdirSync(folderDir)
             return res.json(theme)
         } catch (e) {
             console.log(e)
@@ -23,9 +22,10 @@ class FileController {
 
     async getTheme(req, res) {
         try {
-            const { showAll } = req.body
+            const { showThemes } = req.query
+            console.log("Тело запроса param, showAll: " + showThemes)
             let themes
-            if (showAll) {
+            if (showThemes) {
                 themes = await Theme.find().sort({ order: 1 })
             } else {
                 themes = await Theme.find({ isPublic: "true" }).sort({ order: 1 })
@@ -33,7 +33,6 @@ class FileController {
             themes = themes.map(theme => {
                 theme = JSON.parse(JSON.stringify(theme))
                 theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-                console.log(theme);
                 return theme
             }
             )
@@ -93,4 +92,4 @@ class FileController {
 
 }
 
-module.exports = new FileController()
+module.exports = new ThemeController()
