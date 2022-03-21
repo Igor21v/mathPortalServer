@@ -58,6 +58,18 @@ class ThemeController {
             return res.status(500).json({ message: "Can not post file" })
         }
     }
+    async postPicture(req, res) {
+        const file = req.files.file
+        try {
+            let filePath =  path.join(req.filePath, 'themes', "themePicture", req.body.themeId + ".jpg");
+            /* fs.writeFileSync(filePath, file.data) */
+            await file.mv(filePath)
+            return res.json("Post file OK")
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not post file" })
+        }
+    }
     
     async deleteFile(req, res) {
         const {themeId, nameFile} = req.body
