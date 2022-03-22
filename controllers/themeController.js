@@ -8,8 +8,8 @@ class ThemeController {
 
     async createTheme(req, res) {
         try {
-            const { name, discription, order, isPublic } = req.body
-            const theme = new Theme({ name, discription, order, isPublic })
+            const { name, discription, order, isPublic, hasPicture } = req.body
+            const theme = new Theme({ name, discription, order, isPublic, hasPicture })
             await theme.save()
             const folderDir =  path.join(req.filePath, 'themes', theme.id)    
             fs.mkdirSync(folderDir)

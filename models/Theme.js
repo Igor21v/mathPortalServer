@@ -6,6 +6,7 @@ const Theme = new Schema({
     discription: {type: String},
     order: {type: Number},
     isPublic: {type: Boolean, default: true},
+    hasPicture: {type: Boolean}
 })
 
 module.exports = model('Theme', Theme)
