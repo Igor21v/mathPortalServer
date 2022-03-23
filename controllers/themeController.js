@@ -22,8 +22,8 @@ class ThemeController {
 
     async getTheme(req, res) {
         try {
-            const { showThemes } = req.query
-            console.log("Тело запроса param, showAll: " + showThemes)
+            const { showThemes, searchTheme } = req.query
+            console.log("showAll: " + showThemes + " searchTheme: " + searchTheme)
             let themes
             if (showThemes) {
                 themes = await Theme.find().sort({ order: 1 })
@@ -36,6 +36,10 @@ class ThemeController {
                 return theme
             }
             )
+            if (searchTheme) {
+                themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) || 
+                theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
+            }
             return res.json(themes)
         } catch (e) {
             console.log(e)
