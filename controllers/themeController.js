@@ -11,7 +11,7 @@ class ThemeController {
             const { name, discription, order, isPublic, hasPicture } = req.body
             const theme = new Theme({ name, discription, order, isPublic, hasPicture })
             await theme.save()
-            const folderDir =  path.join(req.filePath, 'themes', theme.id)    
+            const folderDir = path.join(req.filePath, 'themes', theme.id)
             fs.mkdirSync(folderDir)
             return res.json(theme)
         } catch (e) {
@@ -25,10 +25,16 @@ class ThemeController {
             const { showThemes, searchTheme } = req.query
             console.log("showAll: " + showThemes + " searchTheme: " + searchTheme)
             let themes
-            if (showThemes) {
-                themes = await Theme.find().sort({ order: 1 })
-            } else {
-                themes = await Theme.find({ isPublic: "true" }).sort({ order: 1 })
+            switch (showThemes) {
+                case 'all':
+                    themes = await Theme.find().sort({ order: 1 })
+                    break
+                case 'onlyPublic':
+                    themes = await Theme.find({ isPublic: "true" }).sort({ order: 1 })
+                    break
+                case 'onlyDev':
+                    themes = await Theme.find({ isPublic: "false" }).sort({ order: 1 })
+                    break
             }
             themes = themes.map(theme => {
                 theme = JSON.parse(JSON.stringify(theme))
@@ -37,8 +43,8 @@ class ThemeController {
             }
             )
             if (searchTheme) {
-                themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) || 
-                theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
+                themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
+                    theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
             }
             return res.json(themes)
         } catch (e) {
@@ -50,9 +56,9 @@ class ThemeController {
     async postFile(req, res) {
         const file = req.files.file
         try {
-            let filePath =  path.join(req.filePath, 'themes', req.body.themeId, file.name);
+            let filePath = path.join(req.filePath, 'themes', req.body.themeId, file.name);
             if (fs.existsSync(filePath)) {
-                return res.status(400).json({message: 'File already exist'})
+                return res.status(400).json({ message: 'File already exist' })
             }
             /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
@@ -65,7 +71,7 @@ class ThemeController {
     async postPicture(req, res) {
         const file = req.files.file
         try {
-            let filePath =  path.join(req.filePath, 'themes', "themePicture", req.body.themeId + ".jpg");
+            let filePath = path.join(req.filePath, 'themes', "themePicture", req.body.themeId + ".jpg");
             /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
             return res.json("Post file OK")
@@ -74,11 +80,11 @@ class ThemeController {
             return res.status(500).json({ message: "Can not post file" })
         }
     }
-    
+
     async deleteFile(req, res) {
-        const {themeId, nameFile} = req.body
+        const { themeId, nameFile } = req.body
         try {
-            let filePath =  path.join(req.filePath, 'themes', themeId, nameFile);
+            let filePath = path.join(req.filePath, 'themes', themeId, nameFile);
             fs.unlinkSync(filePath)
             return res.json("Delete file OK")
         } catch (e) {
@@ -88,22 +94,22 @@ class ThemeController {
     }
 
     async deleteTheme(req, res) {
-        const {themeId} = req.body
+        const { themeId } = req.body
         try {
             console.log(themeId)
-            const theme = await Theme.findOne({_id: themeId})
+            const theme = await Theme.findOne({ _id: themeId })
             console.log(theme)
             await theme.remove()
-            let filePath =  path.join(req.filePath, 'themes', themeId);
+            let filePath = path.join(req.filePath, 'themes', themeId);
             console.log(filePath)
-            fs.rmSync(filePath, {recursive: true})
+            fs.rmSync(filePath, { recursive: true })
             return res.json("Delete theme OK")
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not delete file" })
         }
     }
-    
+
 
 
 }
