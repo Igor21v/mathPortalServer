@@ -5,7 +5,7 @@ const Theme = new Schema({
     name: {type: String, required: true},
     discription: {type: String},
     order: {type: Number},
-    isPublic: {type: Boolean, default: true},
+    isPublic: {type: Boolean, default: false},
     hasPicture: {type: Boolean}
 })
 

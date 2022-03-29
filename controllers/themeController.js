@@ -13,7 +13,7 @@ class ThemeController {
             await theme.save()
             const folderDir = path.join(req.filePath, 'themes', theme.id)
             fs.mkdirSync(folderDir)
-            return res.json(theme)
+            return res.json('Создание темы успешно завершено')
         } catch (e) {
             console.log(e)
             return res.status(400).json(e)
