@@ -38,8 +38,10 @@ class ThemeController {
             }
             themes = themes.map(theme => {
                 theme = JSON.parse(JSON.stringify(theme))
-                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-                return theme
+                if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
+                    theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
+                }
+                    return theme
             }
             )
             if (searchTheme) {
