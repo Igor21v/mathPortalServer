@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         
         if (token === 'null') {
-            return res.json({ user: {role: 0}})
+            return res.json({ user: {accessLevel: 0}})
         }
         const decoded = jwt.verify(token, config.get('secretKey'))
         req.user = decoded

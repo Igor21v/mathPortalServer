@@ -58,7 +58,7 @@ router.post('/login',
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    role: 2
+                    accessLevel: 2
                 }
             })
         } catch (e) {
@@ -80,7 +80,7 @@ router.get('/auth', authMiddleware,
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    role: 2
+                    accessLevel: 2
                 }
             })
         } catch (e) {

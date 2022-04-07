@@ -96,19 +96,19 @@ class ThemeController {
     }
 
     async deleteTheme(req, res) {
-        const { themeId } = req.body
+        const { id } = req.query
         try {
-            console.log(themeId)
-            const theme = await Theme.findOne({ _id: themeId })
+            console.log(id)
+            const theme = await Theme.findOne({ _id: id })
             console.log(theme)
             await theme.remove()
-            let filePath = path.join(req.filePath, 'themes', themeId);
+            let filePath = path.join(req.filePath, 'themes', id);
             console.log(filePath)
             fs.rmSync(filePath, { recursive: true })
             return res.json("Delete theme OK")
         } catch (e) {
             console.log(e)
-            return res.status(500).json({ message: "Can not delete file" })
+            return res.status(500).json({ message: "Can not delete theme" })
         }
     }
 
