@@ -22,13 +22,24 @@ class ThemeController {
 
     async getTheme(req, res) {
         try {
-            const { showThemes, searchTheme, searchThemeID } = req.query
-            console.log("showAll: " + showThemes + " searchTheme: " + searchTheme)
-            if (searchThemeID) {
-                const theme = await Theme.findById(searchThemeID)
-                console.log('Тема найдена' + theme)
-                return res.json(theme)
+            const { searchThemeID } = req.query
+            let theme = await Theme.findById(searchThemeID)
+            console.log('Тема найдена' + theme.id)
+            if (fs.existsSync(path.join(req.filePath, 'themes', theme.id))) {
+                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme.id))
             }
+            console.log('3333' + theme)
+            return res.json(theme)
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not get theme" })
+        }
+    }
+
+    async getListThemes(req, res) {
+        try {
+            const { showThemes, searchTheme } = req.query
+            console.log("showAll: " + showThemes + " searchTheme: " + searchTheme)
             let themes
             switch (showThemes) {
                 case 'all':
@@ -41,14 +52,6 @@ class ThemeController {
                     themes = await Theme.find({ isPublic: "false" }).sort({ order: 1 })
                     break
             }
-            themes = themes.map(theme => {
-                theme = JSON.parse(JSON.stringify(theme))
-                if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
-                    theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-                }
-                    return theme
-            }
-            )
             if (searchTheme) {
                 themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
