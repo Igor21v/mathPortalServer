@@ -20,6 +20,23 @@ class ThemeController {
         }
     }
 
+    async editTheme(req, res) {
+        try {
+            /* const { Theme } = req.body */
+            let theme = await Theme.findById(req.body._id)
+            console.log(theme)
+            for(let key in req.body){
+                theme[key]= req.body[key]
+            }
+            console.log('new object: ' + theme)
+            await theme.save()
+            return res.json('Изменение темы успешно завершено')
+        } catch (e) {
+            console.log(e)
+            return res.status(400).json(e)
+        }
+    }
+
     async getTheme(req, res) {
         try {
             const { searchThemeID } = req.query
