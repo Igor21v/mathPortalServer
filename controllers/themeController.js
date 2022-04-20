@@ -100,9 +100,12 @@ class ThemeController {
         const file = req.files.file
         try {
             let filePath = path.join(req.filePath, 'themes', "themePicture", req.body.themeId + ".jpg");
-            /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
-            return res.json("Post file OK")
+            let theme = await Theme.findById(req.body.themeId)
+            theme.hasPicture = true
+            console.log(theme)
+            await theme.save()
+            return res.json("Post picture OK")
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not post file" })
