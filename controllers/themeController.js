@@ -41,11 +41,13 @@ class ThemeController {
         try {
             const { searchThemeID } = req.query
             let theme = await Theme.findById(searchThemeID)
-            console.log('Тема найдена' + theme.id)
-            if (fs.existsSync(path.join(req.filePath, 'themes', theme.id))) {
-                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme.id))
+            console.log('Тема найдена ' + theme.id)
+            console.log('Путь ' + fs.existsSync(path.join(req.filePath, 'themes', theme.id)))
+            theme = JSON.parse(JSON.stringify(theme))
+            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
+                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
             }
-            console.log('3333' + theme)
+            console.log('3333 ' + theme)
             return res.json(theme)
         } catch (e) {
             console.log(e)
