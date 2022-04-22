@@ -62,13 +62,13 @@ class ThemeController {
             let themes
             switch (showThemes) {
                 case 'all':
-                    themes = await Theme.find().sort({ order: 1 })
+                    themes = await Theme.find().sort({ order: -1 })
                     break
                 case 'onlyPublic':
-                    themes = await Theme.find({ isPublic: "true" }).sort({ order: 1 })
+                    themes = await Theme.find({ isPublic: "true" }).sort({ order: -1 })
                     break
                 case 'onlyDev':
-                    themes = await Theme.find({ isPublic: "false" }).sort({ order: 1 })
+                    themes = await Theme.find({ isPublic: "false" }).sort({ order: -1 })
                     break
             }
             if (searchTheme) {
