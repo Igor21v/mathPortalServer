@@ -46,6 +46,8 @@ class ThemeController {
             theme = JSON.parse(JSON.stringify(theme))
             if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
                 theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
+            } else {
+                theme.files = []
             }
             console.log('3333 ' + theme)
             return res.json(theme)
@@ -88,11 +90,17 @@ class ThemeController {
         try {
             let filePath = path.join(req.filePath, 'themes', req.body.themeId, file.name);
             if (fs.existsSync(filePath)) {
-                return res.status(400).json({ message: 'File already exist' })
+                return res.status(400).json({ message: 'Ошибка при добавлении: файл ' + file.name + ' уже существует' })
             }
             /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
-            return res.json("Post file OK")
+            let theme = await Theme.findById(req.body.themeId)
+            theme = JSON.parse(JSON.stringify(theme))
+            console.log('Тема найдена: ' + JSON.stringify(theme))
+            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
+                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
+            }
+            return res.json(theme)   
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not post file" })
@@ -115,11 +123,18 @@ class ThemeController {
     }
 
     async deleteFile(req, res) {
-        const { themeId, nameFile } = req.body
+        const { themeId, nameFile } = req.query
         try {
             let filePath = path.join(req.filePath, 'themes', themeId, nameFile);
+            console.log('filePath: ' + filePath)
             fs.unlinkSync(filePath)
-            return res.json("Delete file OK")
+            let theme = await Theme.findById(themeId)
+            theme = JSON.parse(JSON.stringify(theme))
+            console.log('Тема найдена: ' + JSON.stringify(theme))
+            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
+                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
+            }
+            return res.json(theme)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not delete file" })
