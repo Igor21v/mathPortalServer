@@ -25,8 +25,8 @@ class ThemeController {
             /* const { Theme } = req.body */
             let theme = await Theme.findById(req.body._id)
             console.log(theme)
-            for(let key in req.body){
-                theme[key]= req.body[key]
+            for (let key in req.body) {
+                theme[key] = req.body[key]
             }
             console.log('new object: ' + theme)
             await theme.save()
@@ -85,7 +85,7 @@ class ThemeController {
             /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
             const theme = await themeService.getTheme(req)
-            return res.json(theme)   
+            return res.json(theme)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not post file" })
