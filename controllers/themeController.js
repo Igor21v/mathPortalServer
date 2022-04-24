@@ -1,7 +1,7 @@
-const fileService = require('../services/fileService')
 const fs = require('fs')
 const Theme = require('../models/Theme')
 const path = require('path')
+const themeService = require('../services/themeService')
 
 
 class ThemeController {
@@ -40,16 +40,7 @@ class ThemeController {
     async getTheme(req, res) {
         try {
             const { searchThemeID } = req.query
-            let theme = await Theme.findById(searchThemeID)
-            console.log('Тема найдена ' + theme.id)
-            console.log('Путь ' + fs.existsSync(path.join(req.filePath, 'themes', theme.id)))
-            theme = JSON.parse(JSON.stringify(theme))
-            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
-                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-            } else {
-                theme.files = []
-            }
-            console.log('3333 ' + theme)
+            const theme = await themeService.getTheme(req)
             return res.json(theme)
         } catch (e) {
             console.log(e)
