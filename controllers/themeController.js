@@ -39,7 +39,6 @@ class ThemeController {
 
     async getTheme(req, res) {
         try {
-            const { searchThemeID } = req.query
             const theme = await themeService.getTheme(req)
             return res.json(theme)
         } catch (e) {
@@ -85,12 +84,7 @@ class ThemeController {
             }
             /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
-            let theme = await Theme.findById(req.body.themeId)
-            theme = JSON.parse(JSON.stringify(theme))
-            console.log('Тема найдена: ' + JSON.stringify(theme))
-            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
-                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-            }
+            const theme = await themeService.getTheme(req)
             return res.json(theme)   
         } catch (e) {
             console.log(e)
@@ -119,12 +113,7 @@ class ThemeController {
             let filePath = path.join(req.filePath, 'themes', themeId, nameFile);
             console.log('filePath: ' + filePath)
             fs.unlinkSync(filePath)
-            let theme = await Theme.findById(themeId)
-            theme = JSON.parse(JSON.stringify(theme))
-            console.log('Тема найдена: ' + JSON.stringify(theme))
-            if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
-                theme.files = fs.readdirSync(path.join(req.filePath, 'themes', theme._id))
-            }
+            const theme = await themeService.getTheme(req)
             return res.json(theme)
         } catch (e) {
             console.log(e)
