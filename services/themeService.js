@@ -5,9 +5,9 @@ const path = require('path')
 class themeService {
 
     getTheme(req) {
-        return  new Promise(async(resolve, rejects) => {
+        return new Promise(async (resolve, rejects) => {
             try {
-                const themeId = req.query.themeId||req.body.themeId
+                const themeId = req.query.themeId || req.body.themeId
                 let theme = await Theme.findById(themeId)
                 theme = JSON.parse(JSON.stringify(theme))
                 if (fs.existsSync(path.join(req.filePath, 'themes', theme._id))) {
@@ -17,11 +17,12 @@ class themeService {
                 }
                 return resolve(theme)
             } catch (error) {
-                return rejects({message: 'Get theme error'})
+                return rejects({ message: 'Get theme error' })
             }
 
         }
-        )}
+        )
+    }
 
 }
 
