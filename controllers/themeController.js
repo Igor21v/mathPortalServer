@@ -100,10 +100,11 @@ class ThemeController {
             theme.hasPicture = true
             console.log(theme)
             await theme.save()
-            return res.json("Post picture OK")
+            theme = await themeService.getTheme(req)
+            return res.json(theme) 
         } catch (e) {
             console.log(e)
-            return res.status(500).json({ message: "Can not post file" })
+            return res.status(500).json({ message: "Can not post picture" })
         }
     }
 
