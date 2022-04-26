@@ -11,6 +11,7 @@ router.get('/getListThemes', themeController.getListThemes)
 router.put('/edit', themeController.editTheme)
 router.delete('/deleteFile', authMiddleware, themeController.deleteFile)
 router.delete('/deleteTheme', authMiddleware, themeController.deleteTheme)
+router.delete('/deletePicture', authMiddleware, themeController.deletePicture)
 
 
 

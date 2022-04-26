@@ -94,17 +94,32 @@ class ThemeController {
     async postPicture(req, res) {
         const file = req.files.file
         try {
-            let filePath = path.join(req.filePath, 'themes', "themePicture", req.body.themeId + ".jpg");
-            await file.mv(filePath)
             let theme = await Theme.findById(req.body.themeId)
-            theme.hasPicture = true
-            console.log(theme)
+            theme.pictureName = req.body.themeId + Date.now()
+            let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
+            await file.mv(filePath)    
             await theme.save()
             theme = await themeService.getTheme(req)
             return res.json(theme) 
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not post picture" })
+        }
+    }
+    async deletePicture(req, res) {
+        try {
+            console.log('req.body.theme._id ' + req.query.themeId)
+            let theme = await Theme.findById(req.query.themeId)
+            if (theme.pictureName !== 'default') {
+            let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
+            fs.unlinkSync(filePath)
+            theme.pictureName = 'default'
+            await theme.save()
+            theme = await themeService.getTheme(req)}
+            return res.json(theme) 
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not delete picture" })
         }
     }
 
