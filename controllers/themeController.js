@@ -95,12 +95,16 @@ class ThemeController {
         const file = req.files.file
         try {
             let theme = await Theme.findById(req.body.themeId)
+            if (theme.pictureName !== 'default') {
+                let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
+                fs.unlinkSync(filePath)
+            }
             theme.pictureName = req.body.themeId + Date.now()
             let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
-            await file.mv(filePath)    
+            await file.mv(filePath)
             await theme.save()
             theme = await themeService.getTheme(req)
-            return res.json(theme) 
+            return res.json(theme)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not post picture" })
@@ -111,12 +115,13 @@ class ThemeController {
             console.log('req.body.theme._id ' + req.query.themeId)
             let theme = await Theme.findById(req.query.themeId)
             if (theme.pictureName !== 'default') {
-            let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
-            fs.unlinkSync(filePath)
-            theme.pictureName = 'default'
-            await theme.save()
-            theme = await themeService.getTheme(req)}
-            return res.json(theme) 
+                let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
+                fs.unlinkSync(filePath)
+                theme.pictureName = 'default'
+                await theme.save()
+                theme = await themeService.getTheme(req)
+            }
+            return res.json(theme)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not delete picture" })
