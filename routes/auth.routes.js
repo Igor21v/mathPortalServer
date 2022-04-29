@@ -70,8 +70,8 @@ router.post('/login',
 router.get('/auth', authMiddleware,
     async (req, res) => {
         try {
-            const user = await User.findOne({_id: req.user.id})
-            const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "1h"})
+            const user = await User.findOne({_id: req.user.id})  
+            const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "24h"})
             return res.json({
                 token,
                 user: {
@@ -82,10 +82,14 @@ router.get('/auth', authMiddleware,
                     avatar: user.avatar,
                     accessLevel: 2
                 }
-            })
+            })   
         } catch (e) {
-            console.log(e)
-            res.send({message: "Server error"})
+            return res.json({
+                user: {
+                    email: 'guest',
+                    accessLevel: 0
+                }
+            })
         }
     })
 
