@@ -9,7 +9,9 @@ module.exports = (req, res, next) => {
         next()
     }
     catch {
-        res.status(401).json({ message: "Ошибка авторизации" })
+        return res.json({
+            user: {}
+        })
     }
 }
 

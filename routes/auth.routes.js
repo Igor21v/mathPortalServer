@@ -85,9 +85,7 @@ router.get('/auth', authMiddleware,
             })   
         } catch (e) {
             return res.json({
-                user: {
-                    role: 'guest',
-                }
+                user: {}
             })
         }
     })
