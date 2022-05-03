@@ -49,7 +49,7 @@ router.post('/login',
             if (!isPassValid) {
                 return res.status(400).json({message: "Invalid password"})
             }
-            const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "72h"})
+            const token = jwt.sign({id: user.id, role: user.role}, config.get("secretKey"), {expiresIn: "72h"})
             return res.json({
                 token,
                 user: {
@@ -58,7 +58,7 @@ router.post('/login',
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    accessLevel: 2
+                    role: user.role
                 }
             })
         } catch (e) {
@@ -71,7 +71,7 @@ router.get('/auth', authMiddleware,
     async (req, res) => {
         try {
             const user = await User.findOne({_id: req.user.id})  
-            const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "24h"})
+            const token = jwt.sign({id: user.id, role: user.role}, config.get("secretKey"), {expiresIn: "24h"})
             return res.json({
                 token,
                 user: {
@@ -80,14 +80,13 @@ router.get('/auth', authMiddleware,
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    accessLevel: 2
+                    role: user.role
                 }
             })   
         } catch (e) {
             return res.json({
                 user: {
-                    email: 'guest',
-                    accessLevel: 0
+                    role: 'guest',
                 }
             })
         }

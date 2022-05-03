@@ -50,7 +50,6 @@ class ThemeController {
     async getListThemes(req, res) {
         try {
             const { showThemes, searchTheme } = req.query
-            console.log("showAll: " + showThemes + " searchTheme: " + searchTheme)
             let themes
             switch (showThemes) {
                 case 'all':
@@ -67,7 +66,6 @@ class ThemeController {
                 themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
             }
-            console.log('3333' + themes)
             return res.json(themes)
         } catch (e) {
             console.log(e)
