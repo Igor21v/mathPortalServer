@@ -5,7 +5,7 @@ module.exports = function (role) {
         try {
             console.log('req.headers.authorization' + req.headers.authorization)
             const decoded = tokenService.getUser(req)
-            if (decoded.role !== role) {
+            if (!role.includes(decoded.role)) {
                 return res.status(403).json({ message: 'Нарушение прав доступа' })
             }
             req.user = decoded
