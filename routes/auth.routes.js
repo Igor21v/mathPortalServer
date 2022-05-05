@@ -8,25 +8,27 @@ const router = new Router()
 const authMiddleware = require('../middleware/auth.middleware')
 const fileService = require('../services/fileService')
 const File = require('../models/File')
+const checkRoleMiddleware = require('../middleware/checkRole.middleware')
 
-router.post('/registration',
+
+router.post('/registration', checkRoleMiddleware(['ADMIN']),
     [
-        check('email', "Uncorrect email").isEmail(),
-        check('password', 'Password must be longer than 3 and shorter than 12').isLength({min:3, max:12})
+        check('phon', 'Введите последние 10 цифр номера').isLength({min:10, max:10}),
+        check('password', 'Пароль должен быть не короче 3-х и не длинее 12-ти символов').isLength({min:3, max:12})
     ],
     async (req, res) => {
     try {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            return res.status(400).json({message: "Uncorrect request", errors})
+            return res.status(400).json({message: "Ошибка регистрации: " + errors.array()[0].msg})
         }
-        const {email, password} = req.body
-        const candidate = await User.findOne({email})
+        const {phon, password} = req.body
+        const candidate = await User.findOne({phon})
         if(candidate) {
-            return res.status(400).json({message: `User with email ${email} already exist`})
+            return res.status(400).json({message: `User with phon ${phon} already exist`})
         }
         const hashPassword = await bcrypt.hash(password, 8)
-        const user = new User({email, password: hashPassword})
+        const user = new User({phon, password: hashPassword})
         await user.save()
         await fileService.createDir(req, new File({user:user.id, name: ''}))
         res.json({message: "User was created"})
@@ -40,8 +42,8 @@ router.post('/registration',
 router.post('/login',
     async (req, res) => {
         try {
-            const {email, password} = req.body
-            const user = await User.findOne({email})
+            const {phon, password} = req.body
+            const user = await User.findOne({phon})
             if (!user) {
                 return res.status(404).json({message: "User not found"})
             }
@@ -54,7 +56,7 @@ router.post('/login',
                 token,
                 user: {
                     id: user.id,
-                    email: user.email,
+                    phon: user.phon,
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
@@ -76,7 +78,7 @@ router.get('/auth', authMiddleware,
                 token,
                 user: {
                     id: user.id,
-                    email: user.email,
+                    phon: user.phon,
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
