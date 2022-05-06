@@ -8,8 +8,8 @@ class ThemeController {
 
     async createTheme(req, res) {
         try {
-            const { name, discription, order, isPublic, hasPicture } = req.body
-            const theme = new Theme({ name, discription, order, isPublic, hasPicture })
+            const { name, discription } = req.body
+            let theme = new Theme({ name, discription })
             await theme.save()
             const folderDir = path.join(req.filePath, 'themes', theme.id)
             fs.mkdirSync(folderDir)
@@ -150,10 +150,10 @@ class ThemeController {
             let filePath = path.join(req.filePath, 'themes', id);
             console.log(filePath)
             fs.rmSync(filePath, { recursive: true })
-            return res.json("Delete theme OK")
+            return res.json("Тема успешно удалена")
         } catch (e) {
             console.log(e)
-            return res.status(500).json({ message: "Can not delete theme" })
+            return res.status(500).json({ message: "Ошибка при удалении темы" })
         }
     }
 
