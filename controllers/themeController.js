@@ -149,7 +149,9 @@ class ThemeController {
             await theme.remove()
             let filePath = path.join(req.filePath, 'themes', id);
             console.log(filePath)
-            fs.rmSync(filePath, { recursive: true })
+            if (fs.existsSync(filePath)) {
+                fs.rmSync(filePath, { recursive: true })
+            }
             return res.json("Тема успешно удалена")
         } catch (e) {
             console.log(e)
