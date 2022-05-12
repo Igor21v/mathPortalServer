@@ -8,6 +8,8 @@ const User = new Schema({
     usedSpace: {type: Number, default: 0},
     avatar: {type: String},
     role: {type: String, default: 'STUDENT'},
+    name: {type: String, default: ''},
+    surname: {type: String, default: ''},
     files : [{type: ObjectId, ref:'File'}]
 })
 
