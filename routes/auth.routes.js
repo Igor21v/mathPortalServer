@@ -22,13 +22,13 @@ router.post('/registration', checkRoleMiddleware(['ADMIN']),
         if (!errors.isEmpty()) {
             return res.status(400).json({message: "Ошибка регистрации: " + errors.array()[0].msg})
         }
-        const {phon, password} = req.body
+        const {phon, password, name, surname} = req.body
         const candidate = await User.findOne({phon})
         if(candidate) {
             return res.status(400).json({message: `User with phon ${phon} already exist`})
         }
         const hashPassword = await bcrypt.hash(password, 8)
-        const user = new User({phon, password: hashPassword})
+        const user = new User({phon, password: hashPassword, name, surname})
         await user.save()
         await fileService.createDir(req, new File({user:user.id, name: ''}))
         res.json({message: "User was created"})
