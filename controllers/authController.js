@@ -81,7 +81,7 @@ class authController {
     }
     async getUserList(req, res) {
         try {
-            const userList = await User.find({ role: "STUDENT" }).sort({ order: -1 })
+            const userList = await User.find({ role: "STUDENT" }, {password: 0})
             return res.json(userList)
         } catch (e) {
             console.log(e)
