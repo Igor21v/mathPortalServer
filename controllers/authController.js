@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken")
 const { validationResult } = require("express-validator")
 const fileService = require('../services/fileService')
 const File = require('../models/File')
+const path = require('path')
+const fs = require('fs')
 
 class authController {
 
@@ -100,6 +102,25 @@ class authController {
         }
         catch (e) {
             return res.status(500).json({ message: "Can not save user change" })
+        }
+    }
+    async deleteUser(req, res) {
+        try {
+            const id = req.query.id
+            console.log('id ' + JSON.stringify(req.query))
+            const user = await User.findById(id)      
+            const filePath = path.join(req.filePath, 'users', id)
+            if (fs.existsSync(filePath)) {
+                fs.rmSync(filePath, { recuriv: true })
+            }
+            await user.remove()
+            const userList = await User.find({ role: "STUDENT" }, { password: 0 })
+            return res.json(userList)
+        }
+        catch (e) {
+            console.log('Ошибка при удал пользователя')
+            console.log(e)
+            return res.status(500).json({ message: 'Ошибка при удалении пользователя' })
         }
     }
 }
