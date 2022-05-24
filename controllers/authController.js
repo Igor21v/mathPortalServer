@@ -81,13 +81,26 @@ class authController {
     }
     async getUserList(req, res) {
         try {
-            const userList = await User.find({ role: "STUDENT" }, {password: 0})
+            const userList = await User.find({ role: "STUDENT" }, { password: 0 })
             return res.json(userList)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not get users" })
         }
     }
+    async editUser(req, res) {
+        try {
+            const user = await User.findById(req.body.id)
+            for (let key in req.body) {
+                user[key] = req.body[key]
+            }
+            await user.save()
+            const userList = await User.find({ role: "STUDENT" }, { password: 0 })
+            return res.json(userList)
+        }
+        catch (e) {
+            return res.status(500).json({ message: "Can not save user change" })
+        }
+    }
 }
-
 module.exports = new authController()

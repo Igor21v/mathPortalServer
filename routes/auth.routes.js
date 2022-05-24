@@ -13,6 +13,7 @@ router.post('/registration', checkRoleMiddleware(['ADMIN']),
 router.post('/login', authController.login)
 router.get('/auth', authMiddleware, authController.auth)
 router.get('/userList', checkRoleMiddleware(['ADMIN']), authController.getUserList )
+router.put('/user', checkRoleMiddleware(['ADMIN']), authController.editUser)
 
 
 module.exports = router
