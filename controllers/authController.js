@@ -19,13 +19,14 @@ class authController {
             const { phon, password, name, surname } = req.body
             const candidate = await User.findOne({ phon })
             if (candidate) {
-                return res.status(400).json({ message: `User with phon ${phon} already exist` })
+                return res.status(400).json({ message: `Пользователь с номером телефона +7${phon} уже существует` })
             }
             const hashPassword = await bcrypt.hash(password, 8)
             const user = new User({ phon, password: hashPassword, name, surname })
             await user.save()
             await fileService.createDir(req, new File({ user: user.id, name: '' }))
-            res.json({ message: "User was created" })
+            const userList = await User.find({ role: "STUDENT" }, { password: 0 })
+            return res.json(userList)
         } catch (e) {
             console.log(e)
             res.send({ message: "Server error" })
@@ -110,10 +111,10 @@ class authController {
             console.log('id ' + JSON.stringify(req.query))
             const user = await User.findById(id)      
             const filePath = path.join(req.filePath, 'users', id)
-            if (fs.existsSync(filePath)) {
-                fs.rmSync(filePath, { recuriv: true })
-            }
             await user.remove()
+            if (fs.existsSync(filePath)) {
+                fs.rmSync(filePath, { recursive: true })
+            }
             const userList = await User.find({ role: "STUDENT" }, { password: 0 })
             return res.json(userList)
         }
