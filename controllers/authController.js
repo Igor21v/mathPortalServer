@@ -124,5 +124,17 @@ class authController {
             return res.status(500).json({ message: 'Ошибка при удалении пользователя' })
         }
     }
+    async changePassword(req, res) {
+        try {
+            const user = await User.findById(req.body.id)
+            user.password = req.body.password
+            await user.save()
+            return res.json('Изменение пароля прошло успешно')
+        }
+        catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: 'Ошибка при изменении пароля' })
+        }
+    }
 }
 module.exports = new authController()

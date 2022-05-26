@@ -15,6 +15,7 @@ router.get('/auth', authMiddleware, authController.auth)
 router.get('/userList', checkRoleMiddleware(['ADMIN']), authController.getUserList )
 router.put('/user', checkRoleMiddleware(['ADMIN']), authController.editUser)
 router.delete('/user', checkRoleMiddleware(['ADMIN']), authController.deleteUser)
+router.put('/changePassword', checkRoleMiddleware(['ADMIN']), authController.changePassword)
 
 
 module.exports = router

@@ -50,6 +50,7 @@ class ThemeController {
     async getListThemes(req, res) {
         try {
             const { showThemes, searchTheme } = req.query
+            console.log('jjj ' + JSON.stringify(req.query))
             let themes
             switch (showThemes) {
                 case 'all':
