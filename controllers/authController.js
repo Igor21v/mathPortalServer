@@ -19,7 +19,7 @@ class authController {
             }
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role })
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
-            res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
             return res.json({
                 token: tokens.accessToken,
                 user: {
@@ -61,34 +61,40 @@ class authController {
 
     async refresh(req, res) {
         try {
-            const {refreshToken} = req.cookies;
-     /*        const userData = await tokenService.refresh(refreshToken);
-            
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true}) */
-            return res.json(userData);
-           /*  async refresh(refreshToken) {
-                if (!refreshToken) {
-                    throw ApiError.UnauthorizedError();
-                }
-                const userData = tokenService.validateRefreshToken(refreshToken);
-                const tokenFromDb = await tokenService.findToken(refreshToken);
-                if (!userData || !tokenFromDb) {
-                    throw ApiError.UnauthorizedError();
-                }
-                const user = await UserModel.findById(userData.id);
-                const userDto = new UserDto(user);
-                const tokens = tokenService.generateTokens({...userDto});
-        
-                await tokenService.saveToken(userDto.id, tokens.refreshToken);
-                return {...tokens, user: userDto}
+            const { refreshToken } = req.cookies;
+            const decoded = tokenService.validateRefreshToken(refreshToken);
+            const tokenFromDb = await tokenService.findToken(refreshToken);
+            if (!userData || !tokenFromDb) {
+                return res.status(401).json({ message: 'Не авторизован' })
             }
-        
-            async getAllUsers() {
-                const users = await UserModel.find();
-                return users;
-            } */
+            const user = await UserModel.findById(decoded.id);
+            const tokens = tokenService.generateTokens({ id: user.id, role: user.role });
+            await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
+            res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+            return res.json({
+                token: tokens.accessToken,
+                user: {
+                    id: user.id,
+                    phon: user.phon,
+                    diskSpace: user.diskSpace,
+                    usedSpace: user.usedSpace,
+                    avatar: user.avatar,
+                    role: user.role
+                }
+            })
         } catch (e) {
             return res.status(401).json({ message: 'Не авторизован' })
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            const {refreshToken} = req.cookies;
+            const token = await tokenService.removeToken(refreshToken);
+            res.clearCookie('refreshToken');
+            return res.json(token);
+        } catch {
+            res.send({ message: "Server error" })
         }
     }
 
