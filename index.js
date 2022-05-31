@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload")
 const authRouter = require("./routes/auth.routes")
 const fileRouter = require("./routes/file.routes")
 const themeRouter = require("./routes/theme.routes")
+const userRoutes = require("./routes/user.routes")
 const app = express()
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || config.get('serverPort')
@@ -23,6 +24,7 @@ app.use('/themes', express.static(path.resolve('files', 'themes')))
 app.use("/api/auth", authRouter)
 app.use("/api/files", fileRouter)
 app.use("/api/theme", themeRouter)
+app.use('/api/user', userRoutes)
 
 const start = async () => {
     try {
