@@ -12,13 +12,20 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || config.get('serverPort')
 const corsMiddleware = require('./middleware/cors.middleware')
+const cors = require('cors');
+/* const cors = require('cors'); */
 const filePathMiddleware = require('./middleware/filepath.middleware')
 const path = require('path')
 
-app.use(fileUpload({}))
-app.use(corsMiddleware)
-app.use(filePathMiddleware(path.resolve(__dirname, 'files')))
 app.use(express.json())
+app.use(fileUpload({}))
+app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}));
+/* app.use(corsMiddleware) */
+app.use(filePathMiddleware(path.resolve(__dirname, 'files')))
 app.use(express.static(path.resolve('static')))
 app.use('/themes', express.static(path.resolve('files', 'themes')))
 app.use("/api/auth", authRouter)

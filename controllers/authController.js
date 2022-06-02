@@ -20,6 +20,7 @@ class authController {
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role })
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
             res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+            console.log('kkkkk ' + res.cookie)
             return res.json({
                 token: tokens.accessToken,
                 user: {
@@ -61,16 +62,20 @@ class authController {
 
     async refresh(req, res) {
         try {
+         
             const { refreshToken } = req.cookies;
+            /* console.log('k,,k ' + refreshToken) */
             const decoded = tokenService.validateRefreshToken(refreshToken);
             const tokenFromDb = await tokenService.findToken(refreshToken);
+            
             if (!userData || !tokenFromDb) {
-                return res.status(401).json({ message: 'Не авторизован' })
+                return res.status(401).json({ message: 'Не авторизован1' })
             }
             const user = await UserModel.findById(decoded.id);
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role });
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+            
             return res.json({
                 token: tokens.accessToken,
                 user: {
@@ -83,7 +88,8 @@ class authController {
                 }
             })
         } catch (e) {
-            return res.status(401).json({ message: 'Не авторизован' })
+            console.log(e)
+            return res.status(401).json({ message: 'Не авторизован2' })
         }
     }
 
