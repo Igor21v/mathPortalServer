@@ -64,13 +64,13 @@ class authController {
         try {
          
             const { refreshToken } = req.cookies;
-            
+            console.log(',,, ' + refreshToken)
             const decoded = tokenService.validateRefreshToken(refreshToken);
-            console.log(',,,')
+            
             const tokenFromDb = await tokenService.findToken(refreshToken);
-            const user = await User.findById(tokenFromDb.user);
+            const user = await User.findById(decoded.id);
             if (!user || !tokenFromDb) {
-                throw ({message: 'Не авторизованsss'})
+                throw ({message: 'Не авторизован'})
             }         
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role });
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
@@ -89,7 +89,7 @@ class authController {
             })
         } catch (e) {
             console.log(e)
-            return res.status(401).json({ message: 'Не авторизован2' })
+            return res.status(401).json({ message: 'Не авторизован' })
         }
     }
 
