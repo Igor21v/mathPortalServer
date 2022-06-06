@@ -13,7 +13,7 @@ module.exports = function (role) {
         }
         catch {
             console.log('req.user ' + req.user)
-            return res.status(401).json({ message: 'Не авторизован' })
+            return res.status(401).json({ message: 'Не авторизованq' })
         }
     }
 }

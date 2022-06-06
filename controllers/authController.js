@@ -38,28 +38,6 @@ class authController {
         }
     }
 
-    async auth(req, res) {
-        try {
-            const user = await User.findOne({ _id: req.user.id })
-            const token = jwt.sign({ id: user.id, role: user.role }, config.get("secretKey"), { expiresIn: "24h" })
-            return res.json({
-                token,
-                user: {
-                    id: user.id,
-                    phon: user.phon,
-                    diskSpace: user.diskSpace,
-                    usedSpace: user.usedSpace,
-                    avatar: user.avatar,
-                    role: user.role
-                }
-            })
-        } catch (e) {
-            return res.json({
-                user: {}
-            })
-        }
-    }
-
     async refresh(req, res) {
         try {
 
