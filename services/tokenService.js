@@ -4,8 +4,8 @@ const Token = require("../models/Token")
 
 class tokenService {
     generateTokens(payload) {
-        const accessToken = jwt.sign(payload, config.get('secretKey'), { expiresIn: '10s' })
-        const refreshToken = jwt.sign(payload, config.get('secretKeyRefresh'), { expiresIn: '20s' })
+        const accessToken = jwt.sign(payload, config.get('secretKey'), { expiresIn: '15m' })
+        const refreshToken = jwt.sign(payload, config.get('secretKeyRefresh'), { expiresIn: '60d' })
         return {
             accessToken,
             refreshToken

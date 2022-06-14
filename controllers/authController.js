@@ -20,7 +20,6 @@ class authController {
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role })
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
             res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
-            console.log('kkkkk ' + res.cookie)
             return res.json({
                 token: tokens.accessToken,
                 user: {
