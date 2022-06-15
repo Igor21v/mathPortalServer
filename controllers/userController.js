@@ -58,7 +58,7 @@ class authController {
         try {
             const id = req.query.id
             console.log('id ' + JSON.stringify(req.query))
-            const user = await User.findById(id)      
+            const user = await User.findById(id)
             const filePath = path.join(req.filePath, 'users', id)
             await user.remove()
             if (fs.existsSync(filePath)) {
@@ -84,6 +84,24 @@ class authController {
         catch (e) {
             console.log(e)
             return res.status(500).json({ message: 'Ошибка при изменении пароля' })
+        }
+    }
+
+    async getUserExtend(req, res) {
+        try {
+            let user = await User.findById(req.query.id, { password: 0 })
+            user = JSON.parse(JSON.stringify(user))     
+            if (fs.existsSync(path.join(req.filePath, 'users', user._id))) {
+                user.files = fs.readdirSync(path.join(req.filePath, 'users', user._id))
+            } else {
+                user.files = []
+            }
+            console.log('user 2 ' + user)
+            return res.json(user)
+        }
+        catch (e) {
+            console.log('Error ' + e)
+            return res.status(500).json({ message: "Can not get extend user" })
         }
     }
 }
