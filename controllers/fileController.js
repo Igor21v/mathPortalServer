@@ -204,6 +204,21 @@ class FileController {
         }
     }
 
+    async downloadUserFile(req, res) {
+        try {
+            const { userId, file } = req.query
+            console.log('Download start' + req.query.userId + ' ' + req.query.file + ' ' + req.filePath)
+            const filePath = path.join(req.filePath, 'users', userId, file);
+            if (fs.existsSync(filePath)) {
+                return res.download(filePath)
+            }
+            return res.status(400).json({message: "Download error"})
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({message: "Download error"})
+        }
+    }
+
 }
 
 module.exports = new FileController()

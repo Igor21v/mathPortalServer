@@ -6,7 +6,7 @@ const File = require('../models/File')
 const path = require('path')
 const fs = require('fs')
 
-class authController {
+class userController {
 
     async registration(req, res) {
         try {
@@ -106,4 +106,4 @@ class authController {
     }
 }
 
-module.exports = new authController()
+module.exports = new userController()
