@@ -90,9 +90,11 @@ class userController {
     async getUserExtend(req, res) {
         try {
             let user = await User.findById(req.query.id, { password: 0 })
-            user = JSON.parse(JSON.stringify(user))     
-            if (fs.existsSync(path.join(req.filePath, 'users', user._id))) {
-                user.files = fs.readdirSync(path.join(req.filePath, 'users', user._id))
+            user = JSON.parse(JSON.stringify(user))    
+            console.log(';;;;' + (path.join(req.filePath, 'users' ,user._id, req.query.folder))) 
+            const filesPath = path.join(req.filePath, 'users' ,user._id, req.query.folder)
+            if (fs.existsSync(filesPath)) {
+                user.files = fs.readdirSync(filesPath)
             } else {
                 user.files = []
             }

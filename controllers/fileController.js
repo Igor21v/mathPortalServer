@@ -206,9 +206,8 @@ class FileController {
 
     async downloadUserFile(req, res) {
         try {
-            const { userId, file } = req.query
             console.log('Download start' + req.query.userId + ' ' + req.query.file + ' ' + req.filePath)
-            const filePath = path.join(req.filePath, 'users', userId, file);
+            const filePath = path.join(req.filePath, 'users', req.query.userId, req.query.folder, req.query.file);
             if (fs.existsSync(filePath)) {
                 return res.download(filePath)
             }
