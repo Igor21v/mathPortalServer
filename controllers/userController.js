@@ -95,6 +95,7 @@ class userController {
             const filesPath = path.join(req.filePath, 'users' ,user._id, req.query.folder)
             if (fs.existsSync(filesPath)) {
                 user.files = fs.readdirSync(filesPath)
+                console.log('UF ' + user.files)
             } else {
                 user.files = []
             }
