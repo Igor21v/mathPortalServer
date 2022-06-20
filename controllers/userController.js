@@ -5,6 +5,10 @@ const fileService = require('../services/fileService')
 const File = require('../models/File')
 const path = require('path')
 const fs = require('fs')
+const fsPromises = fs.promises;
+/* const { promisify } = require('util')
+const fsExistsAsync = promisify(fs.exists) */
+
 
 class userController {
 
@@ -90,19 +94,23 @@ class userController {
     async getUserExtend(req, res) {
         try {
             let user = await User.findById(req.query.id, { password: 0 })
-            user = JSON.parse(JSON.stringify(user))    
-            console.log(';;;;' + (path.join(req.filePath, 'users' ,user._id, req.query.folder))) 
-            const filesPath = path.join(req.filePath, 'users' ,user._id, req.query.folder)
-            if (fs.existsSync(filesPath)) {
-                user.files = fs.readdirSync(filesPath)
-                console.log('HHH' + user.files.map (file => {
-                    return JSON.stringify(fs.statSync(path.join(filesPath,file)))
-                }))
-
+            user = JSON.parse(JSON.stringify(user))
+            console.log(';;;;' + (path.join(req.filePath, 'users', user._id, req.query.folder)))
+            const filesPath = path.join(req.filePath, 'users', user._id, req.query.folder)
+            const existFiles = await new Promise((resolve, reject) => {
+                resolve(fs.existsSync(filesPath))
+            })
+            if (existFiles) {
+                user.files = await fsPromises.readdir(filesPath)
+                user.files1 = await user.files.map(file => {
+                    const statFile = fs.statSync(path.join(filesPath, file))
+                    return {name: file, time: statFile.mtime, size: statFile.size}
+                })
+                console.log('PPPPPP ' + JSON.stringify(user.files1))
             } else {
                 user.files = []
             }
-            console.log('user 2 ' + user)
+            console.log('user 2 ' + existFiles)
             return res.json(user)
         }
         catch (e) {
