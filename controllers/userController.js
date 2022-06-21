@@ -95,22 +95,22 @@ class userController {
         try {
             let user = await User.findById(req.query.id, { password: 0 })
             user = JSON.parse(JSON.stringify(user))
-            console.log(';;;;' + (path.join(req.filePath, 'users', user._id, req.query.folder)))
             const filesPath = path.join(req.filePath, 'users', user._id, req.query.folder)
-            const existFiles = await new Promise((resolve, reject) => {
-                resolve(fs.existsSync(filesPath))
-            })
-            if (existFiles) {
+            console.log('DN1: ' + Date.now())
+            if (fs.existsSync(filesPath)) {
                 user.files = await fsPromises.readdir(filesPath)
-                user.files1 = await user.files.map(file => {
-                    const statFile = fs.statSync(path.join(filesPath, file))
+                user.files1 = user.files.map(async file => {
+                    console.log('DN3: ' + Date.now())
+                    const statFile = await fsPromises.stat(path.join(filesPath, file))
+                    console.log('DN4: ' + Date.now())
                     return {name: file, time: statFile.mtime, size: statFile.size}
                 })
-                console.log('PPPPPP ' + JSON.stringify(user.files1))
+                console.log('fffgb ' + JSON.stringify(user.files1))
+                console.log('PPPPPP ' + JSON.stringify(user.files))
             } else {
                 user.files = []
             }
-            console.log('user 2 ' + existFiles)
+            console.log('DN2: ' + Date.now())
             return res.json(user)
         }
         catch (e) {
