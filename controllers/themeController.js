@@ -2,6 +2,7 @@ const fs = require('fs')
 const Theme = require('../models/Theme')
 const path = require('path')
 const themeService = require('../services/themeService')
+const fsPromises = fs.promises;
 
 
 class ThemeController {
@@ -12,7 +13,7 @@ class ThemeController {
             let theme = new Theme({ name, discription })
             await theme.save()
             const folderDir = path.join(req.filePath, 'themes', theme.id)
-            fs.mkdirSync(folderDir)
+            await fsPromises.mkdir(folderDir)
             return res.json(theme)
         } catch (e) {
             console.log(e)
@@ -91,12 +92,12 @@ class ThemeController {
         }
     }
     async postPicture(req, res) {
-        const file = req.files.file
         try {
+            const file = req.files.file
             let theme = await Theme.findById(req.body.themeId)
             if (theme.pictureName !== 'default') {
                 let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
-                fs.unlinkSync(filePath)
+                await fsPromises.unlink(filePath)
             }
             theme.pictureName = req.body.themeId + Date.now()
             let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
@@ -115,11 +116,11 @@ class ThemeController {
             let theme = await Theme.findById(req.query.themeId)
             if (theme.pictureName !== 'default') {
                 let filePath = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
-                fs.unlinkSync(filePath)
+                await fsPromises.unlink(filePath)
                 theme.pictureName = 'default'
                 await theme.save()
-                theme = await themeService.getTheme(req)
             }
+            theme = await themeService.getTheme(req)
             return res.json(theme)
         } catch (e) {
             console.log(e)
