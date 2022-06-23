@@ -23,7 +23,6 @@ class ThemeController {
 
     async editTheme(req, res) {
         try {
-            /* const { Theme } = req.body */
             let theme = await Theme.findById(req.body._id)
             console.log(theme)
             for (let key in req.body) {
@@ -76,13 +75,13 @@ class ThemeController {
     }
 
     async postFile(req, res) {
-        const file = req.files.file
+        
         try {
+            const file = req.files.file
             let filePath = path.join(req.filePath, 'themes', req.body.themeId, file.name);
             if (fs.existsSync(filePath)) {
                 return res.status(400).json({ message: 'Ошибка при добавлении: файл ' + file.name + ' уже существует' })
             }
-            /* fs.writeFileSync(filePath, file.data) */
             await file.mv(filePath)
             const theme = await themeService.getTheme(req)
             return res.json(theme)
@@ -133,7 +132,7 @@ class ThemeController {
         try {
             let filePath = path.join(req.filePath, 'themes', themeId, nameFile);
             console.log('filePath: ' + filePath)
-            fs.unlinkSync(filePath)
+            await fsPromises.unlink(filePath)
             const theme = await themeService.getTheme(req)
             return res.json(theme)
         } catch (e) {
@@ -145,14 +144,15 @@ class ThemeController {
     async deleteTheme(req, res) {
         const { id } = req.query
         try {
-            console.log(id)
             const theme = await Theme.findOne({ _id: id })
-            console.log(theme)
+            if (theme.pictureName !== 'default') {
+                let filePathPicture = path.join(req.filePath, 'themes', "themePicture", theme.pictureName + ".jpg");
+                await fsPromises.unlink(filePathPicture)
+            }
             await theme.remove()
             let filePath = path.join(req.filePath, 'themes', id);
-            console.log(filePath)
             if (fs.existsSync(filePath)) {
-                fs.rmSync(filePath, { recursive: true })
+                await fsPromises.rm(filePath, { recursive: true })
             }
             return res.json("Тема успешно удалена")
         } catch (e) {

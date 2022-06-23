@@ -37,7 +37,7 @@ class userController {
 
     async getUserList(req, res) {
         try {
-            const userList = await User.find({ role: "STUDENT" }, { password: 0 })
+            const userList = await User.find({ role: "STUDENT" }, { password: 0 }).sort({surname: 1})
             return res.json(userList)
         } catch (e) {
             console.log(e)
@@ -66,7 +66,7 @@ class userController {
             const filePath = path.join(req.filePath, 'users', id)
             await user.remove()
             if (fs.existsSync(filePath)) {
-                fs.rmSync(filePath, { recursive: true })
+                await fsPromises.rm(filePath, { recursive: true })
             }
             const userList = await User.find({ role: "STUDENT" }, { password: 0 })
             return res.json(userList)
@@ -102,8 +102,6 @@ class userController {
                     const statFile = await fsPromises.stat(path.join(filesPath, file))
                     return { name: file, time: statFile.mtime, size: statFile.size }
                 }))
-                /*           console.log('Yuui ' + (user.files1))
-                          console.log('fffgb ' + JSON.stringify(user.files1)) */
                 console.log('PPPPPP ' + (user.files))
             } else {
                 user.files = []

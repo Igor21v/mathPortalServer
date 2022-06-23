@@ -1,6 +1,7 @@
 const fileService = require('../services/fileService')
 const config = require('config')
 const fs = require('fs')
+const fsPromises = fs.promises
 const User = require('../models/User')
 const File = require('../models/File')
 const Uuid = require('uuid')
@@ -8,44 +9,44 @@ const path = require('path')
 
 
 class FileController {
-    
+
     async change(req, res) {
-       try {
-        const file = path.resolve('static', req.body.name)
-        console.log('start write ')     
-            await  new Promise((resolve, reject) => {
+        try {
+            const file = path.resolve('static', req.body.name)
+            console.log('start write ')
+            await new Promise((resolve, reject) => {
                 fs.writeFileSync(file, req.body.data)
                 resolve()
-              })
+            })
             return res.json('Write OK: ' + req.body.name)
         } catch (err) {
             console.log(err)
             return res.status(400).json(err)
         }
-    }  
+    }
 
     async read(req, res) {
         try {
-         const file = path.resolve('static', req.body.name)
-         console.log('start read ' + req.body.name + 'path: ' + file)     
-             let data = await new Promise((resolve, reject) => {
+            const file = path.resolve('static', req.body.name)
+            console.log('start read ' + req.body.name + 'path: ' + file)
+            let data = await new Promise((resolve, reject) => {
                 let data = fs.readFileSync(file)
                 resolve(data)
-               });
+            });
 
-             return res.json('Read OK: ' + data)
-         } catch (err) {
-             console.log(err)
-             return res.status(400).json(err)
-         }
-     } 
-    
+            return res.json('Read OK: ' + data)
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json(err)
+        }
+    }
+
     async createDir(req, res) {
         try {
-            const {name, type, parent} = req.body
-            const file = new File({name, type, parent, user: req.user.id})
-            const parentFile = await File.findOne({_id: parent})
-            if(!parentFile) {
+            const { name, type, parent } = req.body
+            const file = new File({ name, type, parent, user: req.user.id })
+            const parentFile = await File.findOne({ _id: parent })
+            if (!parentFile) {
                 file.path = name
                 await fileService.createDir(req, file)
             } else {
@@ -64,26 +65,26 @@ class FileController {
 
     async getFiles(req, res) {
         try {
-            const {sort} = req.query
+            const { sort } = req.query
             let files
             switch (sort) {
                 case 'name':
-                    files = await File.find({user: req.user.id, parent: req.query.parent}).sort({name:1})
+                    files = await File.find({ user: req.user.id, parent: req.query.parent }).sort({ name: 1 })
                     break
                 case 'type':
-                    files = await File.find({user: req.user.id, parent: req.query.parent}).sort({type:1})
+                    files = await File.find({ user: req.user.id, parent: req.query.parent }).sort({ type: 1 })
                     break
                 case 'date':
-                    files = await File.find({user: req.user.id, parent: req.query.parent}).sort({date:1})
+                    files = await File.find({ user: req.user.id, parent: req.query.parent }).sort({ date: 1 })
                     break
                 default:
-                    files = await File.find({user: req.user.id, parent: req.query.parent})
+                    files = await File.find({ user: req.user.id, parent: req.query.parent })
                     break;
             }
             return res.json(files)
         } catch (e) {
             console.log(e)
-            return res.status(500).json({message: "Can not get files"})
+            return res.status(500).json({ message: "Can not get files" })
         }
     }
 
@@ -91,11 +92,11 @@ class FileController {
         try {
             const file = req.files.file
 
-            const parent = await File.findOne({user: req.user.id, _id: req.body.parent})
-            const user = await User.findOne({_id: req.user.id})
+            const parent = await File.findOne({ user: req.user.id, _id: req.body.parent })
+            const user = await User.findOne({ _id: req.user.id })
 
             if (user.usedSpace + file.size > user.diskSpace) {
-                return res.status(400).json({message: 'There no space on the disk'})
+                return res.status(400).json({ message: 'There no space on the disk' })
             }
 
             user.usedSpace = user.usedSpace + file.size
@@ -108,7 +109,7 @@ class FileController {
             }
 
             if (fs.existsSync(path)) {
-                return res.status(400).json({message: 'File already exist'})
+                return res.status(400).json({ message: 'File already exist' })
             }
             file.mv(path)
 
@@ -132,50 +133,50 @@ class FileController {
             res.json(dbFile)
         } catch (e) {
             console.log(e)
-            return res.status(500).json({message: "Upload error"})
+            return res.status(500).json({ message: "Upload error" })
         }
     }
 
     async downloadFile(req, res) {
         try {
-            const file = await File.findOne({_id: req.query.id, user: req.user.id})
+            const file = await File.findOne({ _id: req.query.id, user: req.user.id })
             const path = fileService.getPath(req, file)
             if (fs.existsSync(path)) {
                 return res.download(path, file.name)
             }
-            return res.status(400).json({message: "Download error"})
+            return res.status(400).json({ message: "Download error" })
         } catch (e) {
             console.log(e)
-            res.status(500).json({message: "Download error"})
+            res.status(500).json({ message: "Download error" })
         }
     }
     async deleteFile(req, res) {
         try {
-            const file = await File.findOne({_id: req.query.id, user: req.user.id})
+            const file = await File.findOne({ _id: req.query.id, user: req.user.id })
             if (!file) {
-                return res.status(400).json({message: 'file not found'})
+                return res.status(400).json({ message: 'file not found' })
             }
             fileService.deleteFile(req, file)
             await file.remove()
-            return res.json({message: 'File was deleted'})
+            return res.json({ message: 'File was deleted' })
         } catch (e) {
             console.log(e)
-            return res.status(400).json({message: 'Dir is not empty'})
+            return res.status(400).json({ message: 'Dir is not empty' })
         }
     }
 
     async searchFile(req, res) {
         try {
             const searchName = req.query.search
-            let files = await File.find({user: req.user.id})
+            let files = await File.find({ user: req.user.id })
             files = files.filter(file => file.name.includes(searchName))
             return res.json(files)
         } catch (e) {
             console.log(e)
-            return res.status(400).json({message: 'Search error'})
+            return res.status(400).json({ message: 'Search error' })
         }
     }
-   
+
     async uploadAvatar(req, res) {
         try {
             const file = req.files.file
@@ -187,7 +188,7 @@ class FileController {
             return res.json(user)
         } catch (e) {
             console.log(e)
-            return res.status(400).json({message: 'Upload avatar error'})
+            return res.status(400).json({ message: 'Upload avatar error' })
         }
     }
 
@@ -200,7 +201,7 @@ class FileController {
             return res.json(user)
         } catch (e) {
             console.log(e)
-            return res.status(400).json({message: 'Delete avatar error'})
+            return res.status(400).json({ message: 'Delete avatar error' })
         }
     }
 
@@ -211,10 +212,32 @@ class FileController {
             if (fs.existsSync(filePath)) {
                 return res.download(filePath)
             }
-            return res.status(400).json({message: "Download error"})
+            console.log('File not found' + filePath)
+            return res.status(400).json({ message: "Download error, file not found" })
         } catch (e) {
             console.log(e)
-            res.status(500).json({message: "Download error"})
+            res.status(500).json({ message: "Download error" })
+        }
+    }
+
+    async postUserFile(req, res) {
+        try {
+            const file = req.files.file
+            const filePath = path.join(req.filePath, 'users', req.body.userId, req.body.folder, file.name);
+            const folderPath = path.join(req.filePath, 'users', req.body.userId, req.body.folder)
+            if (fs.existsSync(folderPath)) {
+                if (fs.existsSync(filePath)) {
+                    return res.status(400).json({ message: 'Ошибка при добавлении: файл ' + file.name + ' уже существует' })
+                }
+            } else {
+                await fsPromises.mkdir(folderPath)
+            }
+            await file.mv(filePath)
+            const theme = await themeService.getTheme(req)
+            return res.json(theme)
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({ message: "Can not post file" })
         }
     }
 
