@@ -222,6 +222,7 @@ class FileController {
 
     async postUserFile(req, res) {
         try {
+            console.log('start')
             const file = req.files.file
             const filePath = path.join(req.filePath, 'users', req.body.userId, req.body.folder, file.name);
             const folderPath = path.join(req.filePath, 'users', req.body.userId, req.body.folder)
@@ -233,10 +234,16 @@ class FileController {
                 await fsPromises.mkdir(folderPath)
             }
             await file.mv(filePath)
-            const theme = await themeService.getTheme(req)
-            return res.json(theme)
+
+            let user = await User.findById(req.body.userId, { password: 0 })
+            user = JSON.parse(JSON.stringify(user))
+            console.log('kkkk ' + user)
+            const filesPath = path.join(req.filePath, 'users', user._id, req.body.folder)
+            const files = await fileService.getExtendFiles(filesPath)
+            user.files= files
+            return res.json(user)
         } catch (e) {
-            console.log(e)
+            console.log('Ошибка' + e)
             return res.status(500).json({ message: "Can not post file" })
         }
     }

@@ -96,20 +96,12 @@ class userController {
             let user = await User.findById(req.query.id, { password: 0 })
             user = JSON.parse(JSON.stringify(user))
             const filesPath = path.join(req.filePath, 'users', user._id, req.query.folder)
-            if (fs.existsSync(filesPath)) {
-                const files = await fsPromises.readdir(filesPath)
-                user.files = await Promise.all(files.map(async file => {
-                    const statFile = await fsPromises.stat(path.join(filesPath, file))
-                    return { name: file, time: statFile.mtime, size: statFile.size }
-                }))
-                console.log('PPPPPP ' + (user.files))
-            } else {
-                user.files = []
-            }
+            const files = await fileService.getExtendFiles(filesPath)
+            user.files= files
             return res.json(user)
         }
         catch (e) {
-            console.log('Error ' + e)
+            console.log('Error get ' + e)
             return res.status(500).json({ message: "Can not get extend user" })
         }
     }
