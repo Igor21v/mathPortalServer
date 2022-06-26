@@ -228,7 +228,7 @@ class FileController {
             const folderPath = path.join(req.filePath, 'users', req.body.userId, req.body.folder)
             if (fs.existsSync(folderPath)) {
                 if (fs.existsSync(filePath)) {
-                    return res.status(400).json({ message: 'Ошибка при добавлении: файл ' + file.name + ' уже существует' })
+                    return res.status(400).json({ message: 'Файл "' + file.name + '" уже существует' })
                 }
             } else {
                 await fsPromises.mkdir(folderPath)
