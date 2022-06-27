@@ -16,6 +16,7 @@ router.delete('/', authMiddleware, fileController.deleteFile)
 router.delete('/avatar', authMiddleware, fileController.deleteAvatar)
 router.get('/downloadUserFile', checkRoleMiddleware(['ADMIN', 'USER']), fileController.downloadUserFile)
 router.post('/postUserFile', checkRoleMiddleware(['ADMIN', 'USER']), fileController.postUserFile)
+router.delete('/deleteUserFile', checkRoleMiddleware(['ADMIN', 'USER']), fileController.deleteUserFile)
 
 
 module.exports = router

@@ -5,6 +5,7 @@ const fileService = require('../services/fileService')
 const File = require('../models/File')
 const path = require('path')
 const fs = require('fs')
+const { getExtendUser } = require("../services/userService")
 const fsPromises = fs.promises;
 /* const { promisify } = require('util')
 const fsExistsAsync = promisify(fs.exists) */
@@ -93,11 +94,7 @@ class userController {
 
     async getUserExtend(req, res) {
         try {
-            let user = await User.findById(req.query.id, { password: 0 })
-            user = JSON.parse(JSON.stringify(user))
-            const filesPath = path.join(req.filePath, 'users', user._id, req.query.folder)
-            const files = await fileService.getExtendFiles(filesPath)
-            user.files= files
+            const user = await getExtendUser(req.filePath, req.query.id, req.query.folder)
             return res.json(user)
         }
         catch (e) {

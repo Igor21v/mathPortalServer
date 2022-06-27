@@ -6,6 +6,7 @@ const User = require('../models/User')
 const File = require('../models/File')
 const Uuid = require('uuid')
 const path = require('path')
+const { getExtendUser } = require('../services/userService')
 
 
 class FileController {
@@ -222,7 +223,6 @@ class FileController {
 
     async postUserFile(req, res) {
         try {
-            console.log('start')
             const file = req.files.file
             const filePath = path.join(req.filePath, 'users', req.body.userId, req.body.folder, file.name);
             const folderPath = path.join(req.filePath, 'users', req.body.userId, req.body.folder)
@@ -234,17 +234,24 @@ class FileController {
                 await fsPromises.mkdir(folderPath)
             }
             await file.mv(filePath)
-
-            let user = await User.findById(req.body.userId, { password: 0 })
-            user = JSON.parse(JSON.stringify(user))
-            console.log('kkkk ' + user)
-            const filesPath = path.join(req.filePath, 'users', user._id, req.body.folder)
-            const files = await fileService.getExtendFiles(filesPath)
-            user.files= files
+            const user = await getExtendUser(req.filePath, req.body.userId, req.body.folder)
             return res.json(user)
         } catch (e) {
             console.log('Ошибка' + e)
-            return res.status(500).json({ message: "Can not post file" })
+            return res.status(500).json({ message: "Ошбка на сервере" })
+        }
+    }
+
+    async deleteUserFile(req, res) {
+        try {
+            console.log('startDelete')
+            const filePath = path.join(req.filePath, 'users', req.query.userId, req.query.folder, req.query.fileName);
+            await fsPromises.unlink(filePath)
+            const user = await getExtendUser(req.filePath, req.query.userId, req.query.folder)
+            return res.json(user)
+        } catch (e) {
+            console.log('Ошибка' + e)
+            return res.status(500).json({ message: "Ошбка на сервере" })
         }
     }
 
