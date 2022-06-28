@@ -20,6 +20,7 @@ class authController {
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role })
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);
             res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+            console.log('login ' + user)
             return res.json({
                 token: tokens.accessToken,
                 user: {
@@ -28,7 +29,9 @@ class authController {
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    role: user.role
+                    role: user.role,
+                    name: user.name,
+                    surname: user.surname,
                 }
             })
         } catch (e) {
@@ -61,7 +64,9 @@ class authController {
                     diskSpace: user.diskSpace,
                     usedSpace: user.usedSpace,
                     avatar: user.avatar,
-                    role: user.role
+                    role: user.role,
+                    name: user.name,
+                    surname: user.surname,
                 }
             })
         } catch (e) {
