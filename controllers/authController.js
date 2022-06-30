@@ -11,11 +11,11 @@ class authController {
             const { phon, password } = req.body
             const user = await User.findOne({ phon })
             if (!user) {
-                return res.status(404).json({ message: "User not found" })
+                return res.status(404).json({ message: "Пользователь не найден" })
             }
             const isPassValid = bcrypt.compareSync(password, user.password)
             if (!isPassValid) {
-                return res.status(400).json({ message: "Invalid password" })
+                return res.status(400).json({ message: "Неверный пароль" })
             }
             const tokens = tokenService.generateTokens({ id: user.id, role: user.role })
             await tokenService.saveRefreshToken(user._id, tokens.refreshToken);

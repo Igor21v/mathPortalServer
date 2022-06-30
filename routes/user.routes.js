@@ -9,7 +9,7 @@ router.post('/registration', checkRoleMiddleware(['ADMIN']),
         check('password', 'Пароль должен быть не короче 3-х и не длинее 12-ти символов').isLength({min:3, max:12})
     ], userController.registration )
 router.get('/userList', checkRoleMiddleware(['ADMIN']), userController.getUserList )
-router.get('/getUserExtend', checkRoleMiddleware(['ADMIN']), userController.getUserExtend)
+router.get('/getUserExtend', checkRoleMiddleware(['ADMIN', 'STUDENT']), userController.getUserExtend)
 router.put('/user', checkRoleMiddleware(['ADMIN']), userController.editUser)
 router.delete('/user', checkRoleMiddleware(['ADMIN']), userController.deleteUser)
 router.put('/changePassword', checkRoleMiddleware(['ADMIN']), userController.changePassword)

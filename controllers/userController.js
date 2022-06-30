@@ -82,7 +82,9 @@ class userController {
     async changePassword(req, res) {
         try {
             const user = await User.findById(req.body.id)
-            user.password = req.body.password
+            const hashPassword = await bcrypt.hash(req.body.password, 8)
+            user.password = hashPassword
+            console.log('newPassword: ' + hashPassword)
             await user.save()
             return res.json('Изменение пароля прошло успешно')
         }
