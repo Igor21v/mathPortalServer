@@ -224,6 +224,7 @@ class FileController {
     async postUserFile(req, res) {
         try {
             const file = req.files.file
+            console.log('ttt'  + file)
             const filePath = path.join(req.filePath, 'users', req.body.userId, req.body.folder, file.name);
             const folderPath = path.join(req.filePath, 'users', req.body.userId, req.body.folder)
             if (fs.existsSync(folderPath)) {

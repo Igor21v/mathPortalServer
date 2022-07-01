@@ -14,9 +14,9 @@ router.get('/download', authMiddleware, fileController.downloadFile)
 router.get('/search', authMiddleware, fileController.searchFile)
 router.delete('/', authMiddleware, fileController.deleteFile)
 router.delete('/avatar', authMiddleware, fileController.deleteAvatar)
-router.get('/downloadUserFile', checkRoleMiddleware(['ADMIN', 'STUDENT']), fileController.downloadUserFile)
-router.post('/postUserFile', checkRoleMiddleware(['ADMIN', 'STUDENT']), fileController.postUserFile)
-router.delete('/deleteUserFile', checkRoleMiddleware(['ADMIN', 'STUDENT']), fileController.deleteUserFile)
+router.get('/downloadUserFile', checkRoleMiddleware(['ADMIN', 'CUR_STUDENT']), fileController.downloadUserFile)
+router.post('/postUserFile', checkRoleMiddleware(['ADMIN', 'CUR_STUDENT']), fileController.postUserFile)
+router.delete('/deleteUserFile', checkRoleMiddleware(['ADMIN', 'CUR_STUDENT']), fileController.deleteUserFile)
 
 
 module.exports = router
