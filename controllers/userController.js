@@ -96,7 +96,7 @@ class userController {
 
     async getUserExtend(req, res) {
         try {
-            const user = await getExtendUser(req.filePath, req.query.id, req.query.folder)
+            const user = await getExtendUser(req.filePath, req.query.userId, req.query.folder)
             return res.json(user)
         }
         catch (e) {

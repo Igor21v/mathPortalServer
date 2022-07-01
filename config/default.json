@@ -1,6 +1,6 @@
 {
     "serverPort" : 5000,
-    "dbUrl" : "mongodb+srv://igor21v:iK7-Xw2-jdj-V8B@cloud.urqy1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "dbUrl" : "mongodb://localhost:27017/mathPortal",
     "secretKey": "bond-1990",
     "secretKeyRefresh": "bond-refresh-1990",
     "filePath": "C:\\Users\\Igor\\MATH_PORTAL\\server\\files"
