@@ -50,7 +50,11 @@ class ThemeController {
     async getListThemes(req, res) {
         try {
             const { showThemes, searchTheme } = req.query
-            console.log('jjj ' + JSON.stringify(req.query))
+            const numb = await Theme.find().count()
+            const lastId = '62be8255c3f8db53cb174046'
+         /*    const temp = await Theme.find({ _id > lastId }).sort({ order: -1 }).limit(10) */
+            /* temp = await Theme.find('_id' > lastId).sort({ order: -1 }) */
+            console.log('temp  ' + JSON.stringify(temp))
             let themes
             switch (showThemes) {
                 case 'all':
@@ -67,6 +71,11 @@ class ThemeController {
                 themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
             }
+            const response = {
+                themes,
+                lastId
+            }
+            /* console.log('resp ' + response) */
             return res.json(themes)
         } catch (e) {
             console.log(e)
