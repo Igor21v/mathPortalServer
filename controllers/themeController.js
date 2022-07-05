@@ -50,32 +50,33 @@ class ThemeController {
     async getListThemes(req, res) {
         try {
             const { showThemes, searchTheme } = req.query
-            const numb = await Theme.find().count()
-            const lastId = '62be8255c3f8db53cb174046'
-         /*    const temp = await Theme.find({ _id > lastId }).sort({ order: -1 }).limit(10) */
-            /* temp = await Theme.find('_id' > lastId).sort({ order: -1 }) */
-            console.log('temp  ' + JSON.stringify(temp))
-            let themes
+            const page= 3
+            const amountOfPage = 20
+            let themeList
+            let amount
             switch (showThemes) {
                 case 'all':
-                    themes = await Theme.find().sort({ order: -1 })
+                    themeList = await Theme.find().sort({ order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    amount = await Theme.find().count()
                     break
                 case 'onlyPublic':
-                    themes = await Theme.find({ isPublic: "true" }).sort({ order: -1 })
+                    themeList = await Theme.find({ isPublic: "true" }).sort({order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    amount = await Theme.find({ isPublic: "true" }).count()
                     break
                 case 'onlyDev':
-                    themes = await Theme.find({ isPublic: "false" }).sort({ order: -1 })
+                    themeList = await Theme.find({ isPublic: "false" }).sort({ order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    amount = await Theme.find({ isPublic: "false" }).count()
                     break
             }
             if (searchTheme) {
-                themes = themes.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
+                themeList = themeList.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
             }
-            const response = {
-                themes,
-                lastId
+            console.log('amount  ' + JSON.stringify(amount))
+            const themes = {
+                themeList,
+                amount
             }
-            /* console.log('resp ' + response) */
             return res.json(themes)
         } catch (e) {
             console.log(e)
