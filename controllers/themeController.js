@@ -49,8 +49,7 @@ class ThemeController {
 
     async getListThemes(req, res) {
         try {
-            const { showThemes, searchTheme } = req.query
-            const page= 3
+            const { showThemes, searchTheme, page } = req.query
             const amountOfPage = 20
             let themeList
             let amount
@@ -73,11 +72,11 @@ class ThemeController {
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
             }
             console.log('amount  ' + JSON.stringify(amount))
-            const themes = {
+            const response = {
                 themeList,
                 amount
             }
-            return res.json(themes)
+            return res.json(response)
         } catch (e) {
             console.log(e)
             return res.status(500).json({ message: "Can not get themes" })
