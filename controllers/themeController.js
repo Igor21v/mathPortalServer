@@ -55,15 +55,15 @@ class ThemeController {
             let amount
             switch (showThemes) {
                 case 'all':
-                    themeList = await Theme.find().sort({ order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    themeList = await Theme.find().sort({ order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
                     amount = await Theme.find().count()
                     break
                 case 'onlyPublic':
-                    themeList = await Theme.find({ isPublic: "true" }).sort({order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    themeList = await Theme.find({ isPublic: "true" }).sort({order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
                     amount = await Theme.find({ isPublic: "true" }).count()
                     break
                 case 'onlyDev':
-                    themeList = await Theme.find({ isPublic: "false" }).sort({ order: -1, _id: 1 }).skip(page*amountOfPage).limit(amountOfPage)
+                    themeList = await Theme.find({ isPublic: "false" }).sort({ order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
                     amount = await Theme.find({ isPublic: "false" }).count()
                     break
             }
