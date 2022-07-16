@@ -53,24 +53,40 @@ class ThemeController {
             const amountOfPage = 20
             let themeList
             let amount
+            const findString = { $or: [{ name: new RegExp(`${searchTheme}`, 'i') }, { discription: new RegExp(`${searchTheme}`, 'i') }] }
             switch (showThemes) {
                 case 'all':
-                    themeList = await Theme.find().sort({ order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
-                    amount = await Theme.find().count()
+                    if (searchTheme) {
+                        themeList = await Theme.find(findString).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find(findString).count()
+                    } else {
+                        themeList = await Theme.find().sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find().count()
+                    }
                     break
                 case 'onlyPublic':
-                    themeList = await Theme.find({ isPublic: "true" }).sort({order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
-                    amount = await Theme.find({ isPublic: "true" }).count()
+                    if (searchTheme) {
+                        themeList = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).count()
+                    } else {
+                        themeList = await Theme.find({ isPublic: "true" }).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find({ isPublic: "true" }).count()
+                    }
                     break
                 case 'onlyDev':
-                    themeList = await Theme.find({ isPublic: "false" }).sort({ order: -1, _id: 1 }).skip((page-1)*amountOfPage).limit(amountOfPage)
-                    amount = await Theme.find({ isPublic: "false" }).count()
+                    if (searchTheme) {
+                        themeList = await Theme.find({ $and: [{ isPublic: "false" }, findString] }).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find({ $and: [{ isPublic: "false" }, findString] }).count()
+                    } else {
+                        themeList = await Theme.find({ isPublic: "false" }).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
+                        amount = await Theme.find({ isPublic: "false" }).count()
+                    }
                     break
             }
-            if (searchTheme) {
+            /* if (searchTheme) {
                 themeList = themeList.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
                     theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
-            }
+            } */
             console.log('amount  ' + JSON.stringify(amount))
             const response = {
                 themeList,
@@ -84,7 +100,7 @@ class ThemeController {
     }
 
     async postFile(req, res) {
-        
+
         try {
             const file = req.files.file
             let filePath = path.join(req.filePath, 'themes', req.body.themeId, file.name);
