@@ -1,5 +1,3 @@
-console.log("Запуск сервера")
-
 const express = require("express")
 const mongoose = require("mongoose")
 const config = require("config")
@@ -16,6 +14,31 @@ const cors = require('cors');
 /* const cors = require('cors'); */
 const filePathMiddleware = require('./middleware/filepath.middleware')
 const path = require('path')
+const ws = require('ws');
+const wss = new ws.Server({
+    port: 8080,
+}, () => console.log(`Websocket started on 8080`))
+
+wss.on('connection', function connection(ws) {
+    ws.on('message', function (message) {
+        message = JSON.parse(message)
+        switch (message.event) {
+            case 'message':
+                broadcastMessage(message)
+                break;
+            case 'connection':
+                broadcastMessage(message)
+                break;
+        }
+    })
+})
+
+function broadcastMessage(message, id) {
+    wss.clients.forEach(client => {
+        client.send(JSON.stringify(message))
+    })
+}
+
 
 app.use(express.json())
 app.use(fileUpload({}))

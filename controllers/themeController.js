@@ -65,6 +65,11 @@ class ThemeController {
                     }
                     break
                 case 'onlyPublic':
+                    if (page === 'all') {
+                        themeList = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).sort({ order: -1, _id: 1 })
+                        amount = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).count()
+                        break
+                    }
                     if (searchTheme) {
                         themeList = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).sort({ order: -1, _id: 1 }).skip((page - 1) * amountOfPage).limit(amountOfPage)
                         amount = await Theme.find({ $and: [{ isPublic: "true" }, findString] }).count()
@@ -83,10 +88,6 @@ class ThemeController {
                     }
                     break
             }
-            /* if (searchTheme) {
-                themeList = themeList.filter(theme => theme.name.toLowerCase().includes(searchTheme.toLowerCase()) ||
-                    theme.discription.toLowerCase().includes(searchTheme.toLowerCase()))
-            } */
             console.log('amount  ' + JSON.stringify(amount))
             const response = {
                 themeList,
