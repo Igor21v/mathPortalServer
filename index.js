@@ -9,17 +9,19 @@ const userRoutes = require("./routes/user.routes")
 const app = express()
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || config.get('serverPort')
-const corsMiddleware = require('./middleware/cors.middleware')
-const cors = require('cors');
-/* const cors = require('cors'); */
 const filePathMiddleware = require('./middleware/filepath.middleware')
 const path = require('path')
-const ws = require('ws');
-const wss = new ws.Server({
-    port: 8080,
-}, () => console.log(`Websocket started on 8080`))
+const cors = require('cors');
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}));
+app.use(express.json())
 
-wss.on('connection', function connection(ws) {
+const WSServer = require('express-ws')(app)
+const aWss = WSServer.getWss()
+
+/* wss.on('connection', function connection(ws) {
     ws.on('message', function (message) {
         message = JSON.parse(message)
         switch (message.event) {
@@ -31,22 +33,34 @@ wss.on('connection', function connection(ws) {
                 break;
         }
     })
+}) */
+
+app.ws('/connectionWS', (ws, req) => {
+    console.log('Попытка подключения1')
+    ws.on('message', (message) => {
+        message = JSON.parse(message)
+        switch (message.event) {
+            case "message":
+                console.log('Подключен пользователь')
+                broadcastMessage(ws, message)
+                break
+            case "connection":
+                broadcastMessage(ws, message)
+                break
+        }
+    })
 })
 
-function broadcastMessage(message, id) {
-    wss.clients.forEach(client => {
+function broadcastMessage(ws, message) {
+    aWss.clients.forEach(client => {
         client.send(JSON.stringify(message))
     })
 }
 
 
-app.use(express.json())
+
 app.use(fileUpload({}))
 app.use(cookieParser());
-app.use(cors({
-    credentials: true,
-    origin: 'http://localhost:3000'
-}));
 /* app.use(corsMiddleware) */
 app.use(filePathMiddleware(path.resolve(__dirname, 'files')))
 app.use(express.static(path.resolve('static')))
@@ -62,8 +76,6 @@ const start = async () => {
             useNewUrlParser:true,
             useUnifiedTopology:true
         })
-
-
         app.listen(PORT, () => {
             console.log('Server started on port ', PORT)
         })
