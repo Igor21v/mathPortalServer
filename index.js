@@ -21,27 +21,11 @@ app.use(express.json())
 const WSServer = require('express-ws')(app)
 const aWss = WSServer.getWss()
 
-/* wss.on('connection', function connection(ws) {
-    ws.on('message', function (message) {
-        message = JSON.parse(message)
-        switch (message.event) {
-            case 'message':
-                broadcastMessage(message)
-                break;
-            case 'connection':
-                broadcastMessage(message)
-                break;
-        }
-    })
-}) */
-
 app.ws('/connectionWS', (ws, req) => {
-    console.log('Попытка подключения1')
     ws.on('message', (message) => {
         message = JSON.parse(message)
         switch (message.event) {
             case "message":
-                console.log('Подключен пользователь')
                 broadcastMessage(ws, message)
                 break
             case "connection":
@@ -57,11 +41,8 @@ function broadcastMessage(ws, message) {
     })
 }
 
-
-
 app.use(fileUpload({}))
 app.use(cookieParser());
-/* app.use(corsMiddleware) */
 app.use(filePathMiddleware(path.resolve(__dirname, 'files')))
 app.use(express.static(path.resolve('static')))
 app.use('/themes', express.static(path.resolve('files', 'themes')))
