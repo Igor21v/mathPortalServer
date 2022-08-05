@@ -12,6 +12,9 @@ const PORT = process.env.PORT || config.get('serverPort')
 const filePathMiddleware = require('./middleware/filepath.middleware')
 const path = require('path')
 const cors = require('cors');
+const wsController = require("./ws/wsController")
+const wsRoutes = require("./ws/wsRoutes")
+
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
@@ -21,26 +24,7 @@ app.use(express.json())
 const WSServer = require('express-ws')(app)
 const aWss = WSServer.getWss()
 
-app.ws('/connectionWS', (ws, req) => {
-    ws.on('message', (message) => {
-        message = JSON.parse(message)
-        switch (message.event) {
-            case "message":
-                broadcastMessage(ws, message)
-                break
-            case "connection":
-                broadcastMessage(ws, message)
-                break
-        }
-    })
-})
-
-function broadcastMessage(ws, message) {
-    aWss.clients.forEach(client => {
-        client.send(JSON.stringify(message))
-    })
-}
-
+app.ws('/connectionWS', wsRoutes.connectionWS(aWss)) 
 app.use(fileUpload({}))
 app.use(cookieParser());
 app.use(filePathMiddleware(path.resolve(__dirname, 'files')))
