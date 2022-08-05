@@ -10,7 +10,8 @@ const User = new Schema({
     role: {type: String, default: 'STUDENT'},
     name: {type: String, default: ''},
     surname: {type: String, default: ''},
-    files : [{type: ObjectId, ref:'File'}]
+    files : [{type: ObjectId, ref:'File'}],
+    messages : [{type: ObjectId, ref:'Message'}]
 })
 
 module.exports = model('User', User)
