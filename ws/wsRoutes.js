@@ -6,10 +6,10 @@ class wsRoutes {
                 message = JSON.parse(message)
                 switch (message.event) {
                     case "message":
-                        wsController.broadcastMessage(ws, message, aWss)
+                        wsController.messageHandler(ws, message, aWss)
                         break
                     case "connection":
-                        wsController.broadcastMessage(ws, message, aWss)
+                        wsController.connectionHandler(ws, message, aWss)
                         break
                 }
             })

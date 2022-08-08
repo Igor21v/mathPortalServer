@@ -1,5 +1,5 @@
 class wsController {
-    async broadcastMessage(ws, message,aWss) {
+    async messageHandler(ws, message,aWss) {
         try {
             aWss.clients.forEach(client => {
                 client.send(JSON.stringify(message))
@@ -7,6 +7,10 @@ class wsController {
         } catch (error) {
             console.log('Ошибка broadcastMessage ' + error)
         }
+    }
+    connectionHandler = (ws, message, aWss) => {
+        ws.id = message.id
+        this.messageHandler(ws, message, aWss)
     }
 }
 module.exports = new wsController()
