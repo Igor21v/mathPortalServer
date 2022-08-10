@@ -2,7 +2,7 @@ class wsController {
     async messageHandler(ws, message,aWss) {
         try {
             aWss.clients.forEach(client => {
-                if (client.id === message.chatId || client.id === '62be591aa12825192bc7f678')
+                if (client.id === message.chatId || client.id === '62c069d297557c98a2ba729c')
                 client.send(JSON.stringify(message))
             })
         } catch (error) {
