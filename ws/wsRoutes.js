@@ -5,7 +5,7 @@ class wsRoutes {
             ws.on('message', (message) => {
                 message = JSON.parse(message)
                 switch (message.event) {
-                    case "message":
+                    case "newMessage":
                         wsController.messageHandler(ws, message, aWss)
                         break
                     case "connection":

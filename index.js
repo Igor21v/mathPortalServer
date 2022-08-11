@@ -6,6 +6,7 @@ const authRouter = require("./routes/auth.routes")
 const fileRouter = require("./routes/file.routes")
 const themeRouter = require("./routes/theme.routes")
 const userRoutes = require("./routes/user.routes")
+const messageRoutes = require("./routes/message.routes")
 const app = express()
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || config.get('serverPort')
@@ -34,6 +35,7 @@ app.use("/api/auth", authRouter)
 app.use("/api/files", fileRouter)
 app.use("/api/theme", themeRouter)
 app.use('/api/user', userRoutes)
+app.use('/api/message', messageRoutes)
 
 const start = async () => {
     try {
