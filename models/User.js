@@ -11,7 +11,6 @@ const User = new Schema({
     name: {type: String, default: ''},
     surname: {type: String, default: ''},
     files : [{type: ObjectId, ref:'File'}],
-    messages : [{type: ObjectId, ref:'Message'}]
 })
 
 module.exports = model('User', User)
