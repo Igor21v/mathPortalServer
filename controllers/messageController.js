@@ -5,7 +5,7 @@ class MessageController {
 
     async getMessagesList(req, res) {
         try {
-            let messages = await Message.find({ chat: req.query.chatId }).sort
+            let messages = await Message.find({ chat: req.query.chatId }).sort({_id: -1})
             messages = JSON.parse(JSON.stringify(messages))
             messages = await Promise.all(messages.map(async message => {
                 const author = await User.findById(message.author)
