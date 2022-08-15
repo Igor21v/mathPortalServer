@@ -12,8 +12,7 @@ class tokenService {
         }
     }
 
-    validateAccessToken(req) {
-        const token = req.headers.authorization.split(' ')[1]
+    validateAccessToken(token) {
         const decoded = jwt.verify(token, config.get('secretKey'))
         return decoded
     }
