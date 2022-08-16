@@ -32,7 +32,7 @@ class wsController {
                     ws.send(JSON.stringify({ event: 'reqRefresh' }))
                     break;
                 case 'reconnection':
-                    ws.close()
+                    ws.close(1008)
                     break;
                 default:
                     break;
