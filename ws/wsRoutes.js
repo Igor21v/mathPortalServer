@@ -8,7 +8,7 @@ class wsRoutes {
                     case "newMessage":
                         wsController.messageHandler(ws, message, aWss)
                         break
-                    case "connection":
+                    case 'connection', 'reconnection':
                         wsController.connectionHandler(ws, message, aWss)
                         break
                 }

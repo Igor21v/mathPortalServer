@@ -3,16 +3,16 @@ const User = require("../models/User")
 const tokenService = require("../services/tokenService")
 
 class wsController {
-    async messageHandler(ws, message,aWss) {
+    async messageHandler(ws, message, aWss) {
         try {
-            const messageBD = await new Message({date: Date.now(), author: message.authorId, message: message.message, chat: message.chatId})
+            const messageBD = await new Message({ date: Date.now(), author: message.authorId, message: message.message, chat: message.chatId })
             const author = await User.findById(message.authorId)
             message._id = messageBD._id
             message.authorName = author.name
-            const admin = await User.findOne({role: 'ADMIN'})
+            const admin = await User.findOne({ role: 'ADMIN' })
             aWss.clients.forEach(client => {
                 if (client.id === message.chatId || client.id == admin._id)
-                client.send(JSON.stringify(message))
+                    client.send(JSON.stringify(message))
             })
             await messageBD.save()
         } catch (error) {
@@ -25,15 +25,19 @@ class wsController {
             const decoded = tokenService.validateAccessToken(message.accessToken)
             ws.id = decoded.id
             console.log('Авторизация по вебсокету пройдена, id пользователя: ' + decoded.id)
-            /* ws.close(1008) */
-            
         } catch {
-            console.log('Неудача авторизации по вебсокету' )
-
-            ws.close()
-
+            console.log('Неудача авторизации по вебсокету')
+            switch (message.event) {
+                case 'connection':
+                    ws.send(JSON.stringify({ event: 'reqRefresh' }))
+                    break;
+                case 'reconnection':
+                    ws.close()
+                    break;
+                default:
+                    break;
+            }
         }
-        
     }
 }
 module.exports = new wsController()
