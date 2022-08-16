@@ -25,7 +25,7 @@ class wsController {
             const decoded = tokenService.validateAccessToken(message.accessToken)
             ws.id = decoded.id
             console.log('Авторизация по вебсокету пройдена, id пользователя: ' + decoded.id)
-            ws.close(1008)
+            /* ws.close(1008) */
             
         } catch {
             console.log('Неудача авторизации по вебсокету' )
