@@ -3,7 +3,7 @@ const {Schema, model, ObjectId} = require("mongoose")
 
 const Message = new Schema({
     date: {type: Date, required: true},
-    author: {type: String, required: true},
+    authorId: {type: String, required: true},
     message: {type: String},
     chat: {type: ObjectId, ref: 'User'}
 })

@@ -5,10 +5,9 @@ const tokenService = require("../services/tokenService")
 class wsController {
     async messageHandler(ws, message, aWss) {
         try {
-            const messageBD = await new Message({ date: Date.now(), author: message.authorId, message: message.message, chat: message.chatId })
-            const author = await User.findById(message.authorId)
+            const messageBD = await new Message({ date: Date.now(), authorId: message.authorId, message: message.message, chat: message.chatId })
             message._id = messageBD._id
-            message.authorName = author.name
+            message.date = Date.now()
             const admin = await User.findOne({ role: 'ADMIN' })
             aWss.clients.forEach(client => {
                 if (client.id === message.chatId || client.id == admin._id)
@@ -42,5 +41,3 @@ class wsController {
 }
 module.exports = new wsController()
 
-/* 62be591aa12825192bc7f678
-62c069d297557c98a2ba729c */
