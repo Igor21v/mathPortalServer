@@ -5,18 +5,26 @@ class MessageController {
 
     async getMessagesList(req, res) {
         try {
-            let messages = await Message.find({ chat: req.query.chatId }).sort({_id: -1})
-            /* messages = JSON.parse(JSON.stringify(messages))
-            messages = await Promise.all(messages.map(async message => {
-                const author = await User.findById(message.authorId)
-                message.authorName = author.name
-                message.authorSurname = author.surname
-                return message
-            })) */
+            const messages = await Message.find({ chat: req.query.chatId }).sort({ _id: -1 })
             return res.json(messages)
         } catch (e) {
             console.log(e)
             return res.status(400).json(e)
+        }
+    }
+    async deleteMessages(req, res) {
+        try {
+            const messagesId = JSON.parse(req.query.messagesId)
+            await Promise.all(messagesId.map(async messageId => {
+                const message = await Message.findById(messageId)
+                if (message) {
+                    await message.remove()
+                }
+            }))
+            const messages = await Message.find({ chat: req.query.chatId }).sort({ _id: -1 })
+            return res.json(messages)
+        } catch (e) {
+            console.log(e)
         }
     }
 }
